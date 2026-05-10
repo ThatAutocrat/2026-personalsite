@@ -1,6 +1,6 @@
-# Devashish Gogoi — Portfolio (Astro)
+# Portfolio (Astro)
 
-A modern, dark-minimal developer portfolio built with **Astro**.
+Developer portfolio vibe-coded with **Astro**.
 
 ## Stack
 - **Astro** — static site framework (zero JS by default)
@@ -33,13 +33,6 @@ npm run build
 # Preview production build
 npm run preview
 ```
-
-## Deploy to Vercel (recommended)
-
-1. Push this folder to a GitHub repo
-2. Go to [vercel.com](https://vercel.com) → New Project
-3. Import your repo — Vercel auto-detects Astro
-4. Click Deploy ✓
 
 ## Customization
 
