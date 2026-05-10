@@ -1,5 +1,8 @@
 # Portfolio (Astro)
 
+<img width="1881" height="854" alt="image" src="https://github.com/user-attachments/assets/5181c953-ff7e-4524-a162-c919d7693363" />
+
+
 Developer portfolio vibe-coded with **Astro**.
 
 ## Stack
