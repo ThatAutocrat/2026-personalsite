@@ -1,0 +1,357 @@
+---
+---
+<section id="contact" class="contact">
+  <div class="container">
+    <div class="contact-eyebrow reveal">
+      <p class="section-label">04 — contact</p>
+    </div>
+
+    <div class="contact-hero reveal">
+      <!-- Split-line headline -->
+      <h2 class="contact-big">
+        <span class="split-line"><span class="split-inner build-word">Let's</span></span>
+        <span class="split-line"><span class="split-inner contact-big-accent build-word">build</span></span>
+      </h2>
+      <div class="contact-sub-col">
+        <p class="contact-desc">
+          Open to full-time roles, freelance collabs,<br/>
+          or just a good conversation. Always reading.
+        </p>
+        <a href="mailto:devashishgogoi1@gmail.com" class="email-link" id="emailLink">
+          <span class="email-text" data-text="devashishgogoi1@gmail.com">devashishgogoi1@gmail.com</span>
+          <span class="email-arrow">↗</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Marquee ticker -->
+    <div class="marquee-wrap reveal">
+      <div class="marquee-track">
+        <span class="marquee-content">
+          OPEN TO WORK&nbsp;&nbsp;·&nbsp;&nbsp;ASSAM, INDIA&nbsp;&nbsp;·&nbsp;&nbsp;FULL STACK DEV&nbsp;&nbsp;·&nbsp;&nbsp;LET'S TALK&nbsp;&nbsp;·&nbsp;&nbsp;AVAILABLE NOW&nbsp;&nbsp;·&nbsp;&nbsp;NODE · REACT · ANDROID&nbsp;&nbsp;·&nbsp;&nbsp;
+        </span>
+        <span class="marquee-content" aria-hidden="true">
+          OPEN TO WORK&nbsp;&nbsp;·&nbsp;&nbsp;ASSAM, INDIA&nbsp;&nbsp;·&nbsp;&nbsp;FULL STACK DEV&nbsp;&nbsp;·&nbsp;&nbsp;LET'S TALK&nbsp;&nbsp;·&nbsp;&nbsp;AVAILABLE NOW&nbsp;&nbsp;·&nbsp;&nbsp;NODE · REACT · ANDROID&nbsp;&nbsp;·&nbsp;&nbsp;
+        </span>
+      </div>
+    </div>
+
+    <div class="contact-divider reveal"></div>
+
+    <div class="contact-footer reveal">
+      <div class="contact-socials">
+        <a href="https://github.com/ThatAutocrat" target="_blank" rel="noopener" class="social-row">
+          <span class="social-platform">GitHub</span>
+          <span class="social-handle">@ThatAutocrat</span>
+          <span class="social-arrow">↗</span>
+        </a>
+        <a href="https://www.linkedin.com/in/devashish-gogoi-55b6b2223/" target="_blank" rel="noopener" class="social-row">
+          <span class="social-platform">LinkedIn</span>
+          <span class="social-handle">devashish-gogoi</span>
+          <span class="social-arrow">↗</span>
+        </a>
+      </div>
+
+      <div class="contact-availability">
+        <span class="avail-dot"></span>
+        <span class="avail-text">Available for work — Assam, India · IST (UTC+5:30)</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact {
+    background: var(--bg);
+    padding: 7rem 0 5rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .contact-eyebrow { margin-bottom: 2.5rem; }
+
+  .contact-hero {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 4rem;
+    align-items: end;
+    margin-bottom: 3rem;
+  }
+
+  /* ── SPLIT LINE REVEAL ── */
+  .contact-big {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(3.5rem, 9vw, 7.5rem);
+    font-weight: 800;
+    line-height: 0.95;
+    color: var(--text);
+    letter-spacing: -0.02em;
+    overflow: hidden;
+  }
+
+  .split-line {
+    display: block;
+    overflow: hidden;
+    padding-bottom: 0.06em;
+  }
+
+  .split-inner {
+    display: block;
+    transform: translateY(110%);
+    opacity: 0;
+    transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 0.9s ease;
+  }
+
+  .split-inner.revealed {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  .split-line:nth-child(2) .split-inner {
+    transition-delay: 0.12s;
+  }
+
+  .contact-big-accent { color: var(--accent); }
+
+  /* ── ITALIC LEAN on "build" ── */
+  .build-word {
+    display: inline-block;
+    font-style: normal;
+    cursor: default;
+    transition:
+      font-style 0.3s ease,
+      letter-spacing 0.3s ease,
+      transform 0.3s ease;
+  }
+  .build-word:hover {
+    font-style: italic;
+    letter-spacing: 0.01em;
+    transform: skewX(-4deg);
+  }
+
+  .contact-sub-col {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    max-width: 280px;
+    padding-bottom: 0.5rem;
+  }
+
+  .contact-desc {
+    font-size: 0.82rem;
+    line-height: 1.85;
+    color: var(--text-muted);
+  }
+
+  /* ── EMAIL SHUFFLE ── */
+  .email-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent);
+    letter-spacing: 0.02em;
+    padding-bottom: 2px;
+    border-bottom: 1px solid rgba(124,106,247,0.3);
+    transition: border-color 0.3s, gap 0.3s;
+  }
+  .email-link:hover { border-bottom-color: var(--accent); gap: 0.8rem; }
+  .email-arrow { font-size: 0.9rem; transition: transform 0.3s; }
+  .email-link:hover .email-arrow { transform: translate(2px, -2px); }
+
+  /* ── MARQUEE ── */
+  .marquee-wrap {
+    overflow: hidden;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 0.9rem 0;
+    margin-bottom: 3rem;
+  }
+
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marqueeScroll 22s linear infinite;
+  }
+
+  .marquee-content {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    white-space: nowrap;
+    padding-right: 0;
+  }
+
+  .marquee-content .accent { color: var(--accent); }
+
+  @keyframes marqueeScroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  .contact-divider {
+    height: 1px;
+    background: var(--border);
+    margin-bottom: 2.5rem;
+  }
+
+  .contact-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .contact-socials {
+    display: flex;
+    gap: 0;
+    flex-direction: column;
+  }
+
+  .social-row {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    padding: 1rem 0;
+    text-decoration: none;
+    border-bottom: 1px solid var(--border);
+    transition: padding-left 0.3s cubic-bezier(0.76,0,0.24,1);
+    min-width: 320px;
+  }
+  .social-row:first-child { border-top: 1px solid var(--border); }
+  .social-row:hover { padding-left: 0.6rem; }
+  .social-row:hover .social-handle { color: var(--accent); }
+  .social-row:hover .social-arrow { color: var(--accent); transform: translate(2px,-2px); }
+
+  .social-platform {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    width: 72px;
+    flex-shrink: 0;
+  }
+  .social-handle {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+    transition: color 0.25s;
+    flex: 1;
+  }
+  .social-arrow {
+    color: var(--text-muted);
+    font-size: 1rem;
+    transition: color 0.25s, transform 0.25s;
+  }
+
+  .contact-availability {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 0.55rem 1.1rem;
+  }
+  .avail-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #28ca41;
+    flex-shrink: 0;
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+  @keyframes pulse-dot {
+    0%,100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+  .avail-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  @media (max-width: 768px) {
+    .contact-hero { grid-template-columns: 1fr; gap: 2rem; }
+    .contact-sub-col { max-width: 100%; }
+    .contact-footer { flex-direction: column; align-items: flex-start; }
+    .social-row { min-width: 0; width: 100%; }
+  }
+</style>
+
+<script>
+  // ── SPLIT LINE REVEAL ──
+  const splitInners = document.querySelectorAll('.split-inner');
+
+  const headlineObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      entry.target.querySelectorAll('.split-inner').forEach(inner => {
+        inner.classList.add('revealed');
+      });
+      headlineObserver.unobserve(entry.target);
+    });
+  }, { threshold: 0.3 });
+
+  const headline = document.querySelector('.contact-big');
+  if (headline) headlineObserver.observe(headline);
+
+
+  // ── EMAIL CHARACTER SHUFFLE ──
+  const emailLink = document.getElementById('emailLink');
+  const emailText = emailLink?.querySelector('.email-text');
+
+  if (emailLink && emailText) {
+    const original = emailText.dataset.text;
+    const CHARS = 'abcdefghijklmnopqrstuvwxyz0123456789@._-';
+    let shuffleRaf = null;
+    let isShuffling = false;
+
+    function shuffleTick(startTime, duration = 600) {
+      const elapsed = performance.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const resolvedCount = Math.floor(progress * original.length);
+
+      let display = '';
+      for (let i = 0; i < original.length; i++) {
+        if (i < resolvedCount) {
+          display += original[i];
+        } else {
+          if (original[i] === '@' || original[i] === '.' || original[i] === ' ') {
+            display += original[i];
+          } else {
+            display += CHARS[Math.floor(Math.random() * CHARS.length)];
+          }
+        }
+      }
+
+      emailText.textContent = display;
+
+      if (progress < 1) {
+        shuffleRaf = requestAnimationFrame(() => shuffleTick(startTime, duration));
+      } else {
+        emailText.textContent = original;
+        isShuffling = false;
+      }
+    }
+
+    emailLink.addEventListener('mouseenter', () => {
+      if (isShuffling) return;
+      isShuffling = true;
+      cancelAnimationFrame(shuffleRaf);
+      shuffleTick(performance.now(), 700);
+    });
+
+    emailLink.addEventListener('mouseleave', () => {
+      cancelAnimationFrame(shuffleRaf);
+      emailText.textContent = original;
+      isShuffling = false;
+    });
+  }
+</script>

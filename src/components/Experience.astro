@@ -1,0 +1,160 @@
+---
+const skills = [
+  { name: "HTML / CSS",                  category: "craft" },
+  { name: "TypeScript",                  category: "craft" },
+  { name: "Next.js",                     category: "craft" },
+  { name: "Astro + Cloudflare Workers",  category: "craft" },
+  { name: "Radix UI",                    category: "craft" },
+  { name: "Figma + Framer",             category: "design" },
+  { name: "Claude Code",                 category: "ai" },
+  { name: "Git",                         category: "tools" },
+  { name: "Docker",                      category: "tools" },
+  { name: "Rust",                        category: "tools" },
+];
+---
+
+<section id="experience" class="experience">
+  <div class="container">
+    <div class="section-header reveal">
+      <p class="section-label">02 — skills</p>
+      <h2 class="section-title">What I work with<span class="accent-dot">.</span></h2>
+      <div class="section-divider"></div>
+    </div>
+
+    <div class="skills-marquee-wrap">
+      <div class="skills-track">
+        {[...skills, ...skills].map((skill, i) => (
+          <div class="skill-pill" data-category={skill.category}>
+            <span class="pill-dot"></span>
+            <span class="pill-name">{skill.name}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div class="skills-grid-dramatic reveal">
+      {skills.map((skill, i) => (
+        <div class="skill-block" style={`--i: ${i}`} data-category={skill.category}>
+          <span class="skill-index">0{i + 1}</span>
+          <span class="skill-name">{skill.name}</span>
+          <span class="skill-line"></span>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .experience { background: var(--bg); padding: 6rem 0; overflow: hidden; }
+  .section-header { margin-bottom: 4rem; }
+
+  .skills-marquee-wrap {
+    overflow: hidden;
+    mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    margin-bottom: 5rem;
+  }
+  .skills-track {
+    display: flex;
+    gap: 1rem;
+    width: max-content;
+    animation: marqueeScroll 28s linear infinite;
+  }
+  .skills-track:hover { animation-play-state: paused; }
+  @keyframes marqueeScroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  .skill-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 1.2rem;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    background: var(--card-bg);
+    white-space: nowrap;
+    transition: border-color 0.3s, background 0.3s;
+    cursor: default;
+  }
+  .skill-pill:hover { border-color: var(--accent); background: var(--accent-glow); }
+  .pill-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+  .skill-pill[data-category="design"] .pill-dot { background: #4fc4cf; }
+  .skill-pill[data-category="ai"]     .pill-dot { background: #f74fa0; }
+  .skill-pill[data-category="tools"]  .pill-dot { background: #ffbd2e; }
+  .pill-name { font-family: 'DM Mono', monospace; font-size: 0.78rem; color: var(--text-dim); letter-spacing: 0.03em; }
+
+  .skills-grid-dramatic {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 0;
+    border-top: 1px solid var(--border);
+    border-left: 1px solid var(--border);
+  }
+
+  .skill-block {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    padding: 1.4rem 1.8rem;
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+    transition: background 0.35s ease;
+    opacity: 0;
+    animation: fadeUp 0.5s ease forwards;
+    animation-delay: calc(var(--i) * 0.06s);
+    cursor: default;
+  }
+  .skill-block::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--accent-glow);
+    opacity: 0;
+    transition: opacity 0.35s ease;
+  }
+  .skill-block:hover::before { opacity: 1; }
+  .skill-block:hover .skill-name { color: var(--accent); }
+  .skill-block:hover .skill-line { width: 100%; opacity: 1; }
+  .skill-block:hover .skill-index { color: var(--accent); }
+
+  .skill-index {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    transition: color 0.3s;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+  .skill-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+    transition: color 0.3s;
+    flex: 1;
+    position: relative;
+    z-index: 1;
+  }
+  .skill-block[data-category="design"] .skill-index { color: #4fc4cf; }
+  .skill-block[data-category="ai"]     .skill-index { color: #f74fa0; }
+  .skill-block[data-category="tools"]  .skill-index { color: #ffbd2e; }
+
+  .skill-line {
+    position: absolute;
+    bottom: 0; left: 0;
+    height: 2px;
+    width: 0;
+    background: var(--accent);
+    opacity: 0;
+    transition: width 0.4s cubic-bezier(0.76, 0, 0.24, 1), opacity 0.3s;
+  }
+  .skill-block[data-category="design"] .skill-line { background: #4fc4cf; }
+  .skill-block[data-category="ai"]     .skill-line { background: #f74fa0; }
+  .skill-block[data-category="tools"]  .skill-line { background: #ffbd2e; }
+</style>

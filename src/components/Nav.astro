@@ -1,0 +1,186 @@
+---
+---
+<nav class="nav">
+  <div class="nav-inner container">
+    <a href="/" class="nav-logo">
+      <span class="logo-bracket">[</span>DG<span class="logo-bracket">]</span>
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="#about">about</a></li>
+      <li><a href="#experience">experience</a></li>
+      <li><a href="#projects">projects</a></li>
+      <li><a href="#contact">contact</a></li>
+    </ul>
+
+    <div class="nav-actions">
+      <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle theme">
+        <span id="theme-icon">☀</span>
+      </button>
+      <div class="hamburger" id="hamburger" onclick="toggleMobile()">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile menu -->
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="#about" onclick="closeMobile()">about</a>
+    <a href="#experience" onclick="closeMobile()">experience</a>
+    <a href="#projects" onclick="closeMobile()">projects</a>
+    <a href="#contact" onclick="closeMobile()">contact</a>
+  </div>
+</nav>
+
+<script>
+  window.toggleMobile = function() {
+    document.getElementById('mobile-menu')?.classList.toggle('open');
+    document.getElementById('hamburger')?.classList.toggle('active');
+  };
+  window.closeMobile = function() {
+    document.getElementById('mobile-menu')?.classList.remove('open');
+    document.getElementById('hamburger')?.classList.remove('active');
+  };
+
+  // Highlight active section
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY;
+    sections.forEach(section => {
+      const top = (section as HTMLElement).offsetTop - 100;
+      const height = (section as HTMLElement).offsetHeight;
+      const id = section.getAttribute('id');
+      if (scrollY >= top && scrollY < top + height) {
+        navLinks.forEach(link => {
+          link.classList.remove('active');
+          if (link.getAttribute('href') === `#${id}`) link.classList.add('active');
+        });
+      }
+    });
+
+    // Sticky nav style
+    const nav = document.querySelector('.nav');
+    if (scrollY > 50) nav?.classList.add('scrolled');
+    else nav?.classList.remove('scrolled');
+  });
+</script>
+
+<style>
+  .nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+  }
+  .nav.scrolled {
+    background: var(--nav-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 1px 0 var(--border);
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 68px;
+  }
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: var(--text);
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    transition: color 0.2s;
+  }
+  .nav-logo:hover { color: var(--accent); }
+  .logo-bracket { color: var(--accent); }
+
+  .nav-links {
+    display: flex;
+    list-style: none;
+    gap: 2.5rem;
+  }
+  .nav-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.78rem;
+    letter-spacing: 0.05em;
+    transition: color 0.2s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px; left: 0;
+    width: 0; height: 1px;
+    background: var(--accent);
+    transition: width 0.25s ease;
+  }
+  .nav-links a:hover, .nav-links a.active {
+    color: var(--text);
+  }
+  .nav-links a:hover::after, .nav-links a.active::after {
+    width: 100%;
+  }
+
+  .nav-actions { display: flex; align-items: center; gap: 1rem; }
+
+  .theme-btn {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .theme-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 4px;
+  }
+  .hamburger span {
+    display: block;
+    width: 22px; height: 2px;
+    background: var(--text);
+    border-radius: 2px;
+    transition: all 0.3s ease;
+  }
+  .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+  .hamburger.active span:nth-child(2) { opacity: 0; }
+  .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+  .mobile-menu {
+    display: none;
+    flex-direction: column;
+    background: var(--nav-bg);
+    backdrop-filter: blur(16px);
+    padding: 1.5rem 2rem;
+    gap: 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+  .mobile-menu a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+  }
+  .mobile-menu a:hover { color: var(--accent); }
+
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .mobile-menu.open { display: flex; }
+  }
+</style>

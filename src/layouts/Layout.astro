@@ -1,0 +1,202 @@
+---
+interface Props {
+  title?: string;
+  description?: string;
+}
+const { title = "Devashish Gogoi — Developer", description = "Full Stack Developer based in India" } = Astro.props;
+---
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content={description} />
+  <title>{title}</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+</head>
+<body>
+
+  <!-- ─── Glitch Loader ──────────────────────────────────────────────────── -->
+  <div id="loader">
+    <div id="loader-text">
+      <span id="glitch-main" data-text="DG"></span>
+    </div>
+  </div>
+
+  <!-- ─── Spotlight Cursor ─────────────────────────────────────────────── -->
+  <div id="spotlight"></div>
+
+  <slot />
+  <script>
+    // Theme toggle
+    const html = document.documentElement;
+    const saved = localStorage.getItem('theme') || 'dark';
+    html.setAttribute('data-theme', saved);
+
+    window.toggleTheme = function() {
+      const current = html.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      // Update icon
+      const icon = document.getElementById('theme-icon');
+      if (icon) icon.textContent = next === 'dark' ? '☀' : '☾';
+    };
+
+    // Set initial icon
+    document.addEventListener('DOMContentLoaded', () => {
+      const icon = document.getElementById('theme-icon');
+      if (icon) icon.textContent = saved === 'dark' ? '☀' : '☾';
+    });
+
+    // Smooth scroll with easing for all anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+
+    // Intersection Observer for all reveal classes
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.08 });
+
+    document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => observer.observe(el));
+  </script>
+
+  <script>
+    // Spotlight cursor
+    const spot = document.getElementById('spotlight');
+    let spotX = 0, spotY = 0, curX = 0, curY = 0, raf;
+    document.addEventListener('mousemove', (e) => {
+      curX = e.clientX; curY = e.clientY;
+      document.body.classList.add('spotlight-active');
+    });
+    document.addEventListener('mouseleave', () => document.body.classList.remove('spotlight-active'));
+    function lerp(a, b, t) { return a + (b - a) * t; }
+    function animSpot() {
+      spotX = lerp(spotX, curX, 0.08);
+      spotY = lerp(spotY, curY, 0.08);
+      spot.style.left = spotX + 'px';
+      spot.style.top  = spotY + 'px';
+      raf = requestAnimationFrame(animSpot);
+    }
+    animSpot();
+  </script>
+
+  <script>
+    (function () {
+      const FULL_NAME   = 'DEVASHISH GOGOI';
+      const FINAL_TEXT  = 'DG';
+      const CHARS       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&';
+      const SCRAMBLE_MS = 1800;   // how long the full name scrambles
+      const COLLAPSE_MS = 700;    // how long collapsing to DG takes
+      const HOLD_MS     = 400;    // DG stays visible before exit
+      const GLITCH_MS   = 900;    // glitch flicker on DG
+
+      const loader  = document.getElementById('loader');
+      const mainEl  = document.getElementById('glitch-main');
+
+      let frame, startTime;
+
+      function rand(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+      function randChar() { return rand(CHARS.split('')); }
+
+      /* ── Phase 1: full name scrambles in ── */
+      function phaseScramble() {
+        startTime = performance.now();
+        const totalFrames = Math.round(SCRAMBLE_MS / 16);
+        let f = 0;
+
+        function tick() {
+          const progress = f / totalFrames;  // 0 → 1
+          // gradually lock letters from left as progress grows
+          const locked = Math.floor(progress * FULL_NAME.length);
+          let display = '';
+          for (let i = 0; i < FULL_NAME.length; i++) {
+            if (FULL_NAME[i] === ' ') { display += ' '; continue; }
+            display += i < locked ? FULL_NAME[i] : randChar();
+          }
+          mainEl.textContent = display;
+          mainEl.setAttribute('data-text', display);
+          f++;
+          if (f <= totalFrames) {
+            frame = requestAnimationFrame(tick);
+          } else {
+            mainEl.textContent = FULL_NAME;
+            mainEl.setAttribute('data-text', FULL_NAME);
+            setTimeout(phaseCollapse, 200);
+          }
+        }
+        frame = requestAnimationFrame(tick);
+      }
+
+      /* ── Phase 2: collapse letter-by-letter to DG ── */
+      function phaseCollapse() {
+        // We'll animate the display shrinking: DEVASHISH GOGOI → D GOGOI → DG → DG
+        const steps = [
+          'DEVASHISH GOGOI',
+          'DEVASHISH G',
+          'DEVASHISH',
+          'DEVASH',
+          'DEVA',
+          'DEV',
+          'DE',
+          'D G',
+          'DG',
+        ];
+        let si = 0;
+        const interval = COLLAPSE_MS / steps.length;
+
+        function nextStep() {
+          if (si >= steps.length) {
+            phaseGlitch();
+            return;
+          }
+          const s = steps[si++];
+          // scramble the non-target chars
+          let display = '';
+          for (let i = 0; i < s.length; i++) {
+            display += s[i] === ' ' ? ' ' : (Math.random() > 0.4 ? s[i] : randChar());
+          }
+          mainEl.textContent = display;
+          mainEl.setAttribute('data-text', display);
+          setTimeout(() => {
+            mainEl.textContent = s;
+            mainEl.setAttribute('data-text', s);
+            setTimeout(nextStep, interval * 0.6);
+          }, interval * 0.4);
+        }
+        nextStep();
+      }
+
+      /* ── Phase 3: DG glitches, then exit ── */
+      function phaseGlitch() {
+        mainEl.textContent = FINAL_TEXT;
+        mainEl.setAttribute('data-text', FINAL_TEXT);
+        mainEl.classList.add('glitch-active');
+        setTimeout(phaseExit, GLITCH_MS + HOLD_MS);
+      }
+
+      /* ── Phase 4: loader slides up, site revealed ── */
+      function phaseExit() {
+        loader.classList.add('loader-exit');
+        loader.addEventListener('transitionend', () => {
+          loader.style.display = 'none';
+          document.body.classList.add('loaded');
+        }, { once: true });
+      }
+
+      phaseScramble();
+    })();
+  </script>
+</body>
+</html>

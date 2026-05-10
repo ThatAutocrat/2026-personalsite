@@ -1,0 +1,428 @@
+---
+---
+<section id="about">
+  <div class="container">
+
+    <div class="finder-window reveal">
+
+      <!-- Title bar -->
+      <div class="finder-titlebar">
+        <div class="finder-controls">
+          <span class="dot dot-red"></span>
+          <span class="dot dot-yellow"></span>
+          <span class="dot dot-green"></span>
+        </div>
+        <div class="finder-title">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:0.5"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+          devashish — about
+        </div>
+      </div>
+
+      <!-- Finder body -->
+      <div class="finder-body">
+
+        <!-- Sidebar -->
+        <div class="finder-sidebar">
+
+          <p class="sidebar-label">Recent Activity</p>
+          <div class="activity-item">
+            <span class="activity-dot" style="background:#7c6af7"></span>
+            <div>
+              <span class="activity-title">Pushed to portfolio</span>
+              <span class="activity-time">2 hrs ago</span>
+            </div>
+          </div>
+          <div class="activity-item">
+            <span class="activity-dot" style="background:#00d4ff"></span>
+            <div>
+              <span class="activity-title">Built REST API</span>
+              <span class="activity-time">Yesterday</span>
+            </div>
+          </div>
+          <div class="activity-item">
+            <span class="activity-dot" style="background:#28ca41"></span>
+            <div>
+              <span class="activity-title">Shipped Android fix</span>
+              <span class="activity-time">3 days ago</span>
+            </div>
+          </div>
+          <div class="activity-item">
+            <span class="activity-dot" style="background:#ffbd2e"></span>
+            <div>
+              <span class="activity-title">Designed in Figma</span>
+              <span class="activity-time">This week</span>
+            </div>
+          </div>
+
+          <p class="sidebar-label" style="margin-top:1.4rem">Fun Facts</p>
+          <div class="fact-item">☕ Runs on black coffee</div>
+          <div class="fact-item">🎧 Lo-fi while coding</div>
+          <div class="fact-item">🌙 Night owl by default</div>
+          <div class="fact-item">📍 From Assam, India</div>
+
+          <p class="sidebar-label" style="margin-top:1.4rem">Tags</p>
+          <div class="sidebar-tag"><span class="tag-dot" style="background:#ff6058"></span>Open to Work</div>
+          <div class="sidebar-tag"><span class="tag-dot" style="background:#28ca41"></span>Available</div>
+          <div class="sidebar-tag"><span class="tag-dot" style="background:#7c6af7"></span>Full Stack</div>
+
+        </div>
+
+        <!-- Main content -->
+        <div class="finder-main">
+
+          <!-- Breadcrumb -->
+          <div class="finder-breadcrumb">
+            <span>devashish</span>
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            <span class="breadcrumb-active">about</span>
+          </div>
+
+          <!-- Section label + typewriter title -->
+          <div class="about-header">
+            <p class="finder-eyebrow">01 — about</p>
+            <h2 class="finder-heading"><span class="typewriter-target"></span><span style="color:#7c6af7">.</span></h2>
+          </div>
+
+          <div class="finder-divider"></div>
+
+          <!-- Plain text intro -->
+          <div class="about-body">
+            <p>
+              Hi, I'm Devashish — a recent B.Tech Computer Science graduate and a self-taught Full Stack Developer with a passion for building beautiful, responsive web experiences.
+            </p>
+            <p>
+              I work across the entire stack — from crafting clean UIs to building Node/Express backends. I also have experience with Android development and I'm currently wrestling with prompt design & automation like it's a personal grudge match.
+            </p>
+            <p>
+              I'm actively looking for opportunities to grow, collaborate, and build things that matter.
+            </p>
+          </div>
+
+          <!-- Status bar -->
+          <div class="finder-statusbar">
+            <div class="status-chip">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+              B.Tech CSE · VIT
+            </div>
+            <div class="status-chip">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Assam, India · IST
+            </div>
+            <div class="status-chip available-chip">
+              <span class="pulse-ring"></span>
+              Available now
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  #about {
+    background: var(--bg);
+    padding: 6rem 0;
+  }
+
+  /* ── FINDER WINDOW ── */
+  .finder-window {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow:
+      0 0 0 1px var(--finder-border),
+      0 32px 80px var(--finder-shadow),
+      0 8px 24px rgba(0,0,0,0.2);
+  }
+
+  /* titlebar */
+  .finder-titlebar {
+    background: var(--finder-titlebar);
+    display: flex;
+    align-items: center;
+    padding: 0 14px;
+    height: 40px;
+    gap: 1rem;
+    border-bottom: 1px solid var(--finder-border);
+    position: relative;
+  }
+  .finder-controls { display: flex; gap: 7px; align-items: center; }
+  .dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  .dot-red    { background: #ff6058; }
+  .dot-yellow { background: #ffbd2e; }
+  .dot-green  { background: #28ca41; }
+
+  .finder-title {
+    position: absolute;
+    left: 50%; transform: translateX(-50%);
+    font-size: 12px;
+    font-family: -apple-system, 'SF Pro Text', sans-serif;
+    font-weight: 500;
+    color: var(--finder-title-color);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+  }
+
+  .finder-body {
+    display: flex;
+    min-height: 420px;
+  }
+
+  /* ── SIDEBAR ── */
+  .finder-sidebar {
+    width: 190px;
+    flex-shrink: 0;
+    background: var(--finder-sidebar);
+    border-right: 1px solid var(--finder-border);
+    padding: 1rem 0.6rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--finder-muted);
+    padding: 0 0.4rem;
+    margin-bottom: 0.4rem;
+    font-family: -apple-system, sans-serif;
+  }
+
+  .activity-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 0.3rem 0.4rem;
+    border-radius: 6px;
+    transition: background 0.15s;
+    cursor: default;
+    margin-bottom: 2px;
+  }
+  .activity-item:hover { background: var(--finder-hover); }
+  .activity-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+  .activity-title {
+    display: block;
+    font-size: 11.5px;
+    font-family: -apple-system, sans-serif;
+    color: var(--finder-text);
+    font-weight: 500;
+    line-height: 1.3;
+  }
+  .activity-time {
+    display: block;
+    font-size: 10px;
+    color: var(--finder-muted);
+    font-family: -apple-system, sans-serif;
+  }
+
+  .fact-item {
+    font-size: 11.5px;
+    font-family: -apple-system, sans-serif;
+    color: var(--finder-text-secondary);
+    padding: 0.28rem 0.4rem;
+    border-radius: 6px;
+    transition: background 0.15s;
+    cursor: default;
+  }
+  .fact-item:hover { background: var(--finder-hover); }
+
+  .sidebar-tag {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 0.28rem 0.4rem;
+    border-radius: 6px;
+    font-size: 11.5px;
+    color: var(--finder-text);
+    font-family: -apple-system, sans-serif;
+    cursor: default;
+    transition: background 0.15s;
+  }
+  .sidebar-tag:hover { background: var(--finder-hover); }
+  .tag-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+
+  /* ── MAIN PANEL ── */
+  .finder-main {
+    flex: 1;
+    background: var(--finder-main);
+    display: flex;
+    flex-direction: column;
+    padding: 1.4rem 2rem 1rem;
+  }
+
+  .finder-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11.5px;
+    font-family: -apple-system, sans-serif;
+    color: var(--finder-muted);
+    margin-bottom: 1.2rem;
+  }
+  .breadcrumb-active { color: var(--finder-text); font-weight: 500; }
+
+  .finder-eyebrow {
+    font-size: 0.7rem;
+    color: var(--finder-muted);
+    margin-bottom: 0.3rem;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .finder-heading {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    font-weight: 800;
+    color: var(--finder-text);
+    line-height: 1.1;
+    margin-bottom: 1rem;
+  }
+
+  .finder-divider {
+    height: 1px;
+    background: var(--finder-border);
+    margin-bottom: 1.2rem;
+  }
+
+  .about-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+  .about-body p {
+    font-size: 0.85rem;
+    line-height: 1.85;
+    color: var(--finder-text-secondary);
+    font-family: -apple-system, 'SF Pro Text', sans-serif;
+    margin: 0;
+  }
+
+  /* Status bar */
+  .finder-statusbar {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.7rem 0 0.2rem;
+    border-top: 1px solid var(--finder-border);
+    margin-top: 1.2rem;
+    flex-wrap: wrap;
+  }
+  .status-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 0.22rem 0.6rem;
+    background: var(--finder-chip);
+    border-radius: 100px;
+    font-size: 11px;
+    font-family: -apple-system, sans-serif;
+    color: var(--finder-text-secondary);
+  }
+  .available-chip {
+    background: rgba(40,202,65,0.12);
+    color: #28ca41;
+  }
+  [data-theme="light"] .available-chip { color: #166522; }
+
+  /* Typewriter */
+  .typewriter-target {
+    display: inline-block;
+    border-right: 2px solid #7c6af7;
+    animation: cursorBlink 0.75s step-end infinite;
+  }
+  @keyframes cursorBlink {
+    0%, 100% { border-right-color: #7c6af7; }
+    50%       { border-right-color: transparent; }
+  }
+
+  /* Pulse ring */
+  .pulse-ring {
+    position: relative;
+    display: inline-block;
+    width: 8px; height: 8px;
+    flex-shrink: 0;
+  }
+  .pulse-ring::before,
+  .pulse-ring::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: #28ca41;
+  }
+  .pulse-ring::before {
+    animation: pulseOut 2s ease-out infinite;
+    opacity: 0;
+  }
+  .pulse-ring::after {
+    width: 6px; height: 6px;
+    top: 1px; left: 1px;
+  }
+  @keyframes pulseOut {
+    0%   { transform: scale(1);   opacity: 0.8; }
+    100% { transform: scale(3.5); opacity: 0; }
+  }
+
+  /* Reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1);
+  }
+  .reveal.revealed { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 768px) {
+    .finder-sidebar { display: none; }
+    .finder-main { padding: 1rem; }
+  }
+</style>
+
+<script>
+  /* ── REVEAL ── */
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('revealed'); revealObserver.unobserve(e.target); }
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  /* ── TYPEWRITER ── */
+  const el = document.querySelector('.typewriter-target');
+  const phrases = [
+    { text: 'Who I am',  color: '#7c6af7' },
+    { text: 'Remote',    color: '#00d4ff' },
+    { text: 'Available', color: '#28ca41' },
+  ];
+  let phraseIndex = 0, charIndex = 0, deleting = false;
+
+  function tick() {
+    const { text, color } = phrases[phraseIndex];
+    el.style.borderRightColor = color;
+    if (!deleting) {
+      el.textContent = text.slice(0, ++charIndex);
+      if (charIndex === text.length) { setTimeout(() => { deleting = true; tick(); }, 2200); return; }
+    } else {
+      el.textContent = text.slice(0, --charIndex);
+      if (charIndex === 0) {
+        deleting = false;
+        phraseIndex = (phraseIndex + 1) % phrases.length;
+        setTimeout(tick, 500); return;
+      }
+    }
+    setTimeout(tick, deleting ? 40 : 85 + Math.random() * 30);
+  }
+  tick();
+</script>

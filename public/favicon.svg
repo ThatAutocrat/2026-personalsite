@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a0a0a"/>
+      <stop offset="60%" style="stop-color:#0d0d0d"/>
+      <stop offset="100%" style="stop-color:#1a0505"/>
+    </linearGradient>
+    <linearGradient id="redGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff3333"/>
+      <stop offset="100%" style="stop-color:#cc0000"/>
+    </linearGradient>
+    <linearGradient id="whiteGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#cccccc"/>
+      <stop offset="100%" style="stop-color:#ffffff"/>
+    </linearGradient>
+    <filter id="redGlow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="softGlow">
+      <feGaussianBlur stdDeviation="1.2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <clipPath id="roundClip">
+      <rect width="100" height="100" rx="18" ry="18"/>
+    </clipPath>
+  </defs>
+
+  <!-- Background -->
+  <rect width="100" height="100" rx="18" ry="18" fill="url(#bgGrad)"/>
+
+  <!-- Red sun circle (rising sun motif) - bottom half peeking -->
+  <circle cx="50" cy="88" r="38" fill="url(#redGrad)" opacity="0.18" clip-path="url(#roundClip)"/>
+  <circle cx="50" cy="88" r="28" fill="url(#redGrad)" opacity="0.12" clip-path="url(#roundClip)"/>
+
+  <!-- Horizontal speed lines (Japanese manga style) -->
+  <g opacity="0.13" stroke="#ff2222" stroke-width="0.5">
+    <line x1="0" y1="30" x2="100" y2="30"/>
+    <line x1="0" y1="36" x2="100" y2="36"/>
+    <line x1="0" y1="42" x2="100" y2="42"/>
+    <line x1="0" y1="48" x2="100" y2="48"/>
+    <line x1="0" y1="54" x2="100" y2="54"/>
+    <line x1="0" y1="60" x2="100" y2="60"/>
+    <line x1="0" y1="66" x2="100" y2="66"/>
+  </g>
+
+  <!-- Red bold border stroke — chunky Japanese seal vibe -->
+  <rect x="5" y="5" width="90" height="90" rx="13" ry="13" fill="none" stroke="#cc0000" stroke-width="2.5" opacity="0.9"/>
+
+  <!-- Inner white hairline border -->
+  <rect x="8.5" y="8.5" width="83" height="83" rx="10" ry="10" fill="none" stroke="#ffffff" stroke-width="0.5" opacity="0.15"/>
+
+  <!-- Diagonal slash accent — dynamic, energetic -->
+  <line x1="14" y1="86" x2="86" y2="14" stroke="#cc0000" stroke-width="1" opacity="0.25" stroke-linecap="round"/>
+
+  <!-- Red circle dot — Japanese hanko/seal motif -->
+  <circle cx="50" cy="50" r="34" fill="none" stroke="#cc0000" stroke-width="1.2" opacity="0.2"/>
+
+  <!-- DG shadow layer -->
+  <text
+    x="51"
+    y="64"
+    font-family="'Arial Black', 'Impact', sans-serif"
+    font-size="44"
+    font-weight="900"
+    letter-spacing="-3"
+    text-anchor="middle"
+    fill="#cc0000"
+    opacity="0.35"
+    dx="1.5"
+    dy="1.5"
+  >DG</text>
+  <!-- DG main text -->
+  <text
+    x="50"
+    y="63"
+    font-family="'Arial Black', 'Impact', sans-serif"
+    font-size="44"
+    font-weight="900"
+    letter-spacing="-3"
+    text-anchor="middle"
+    fill="url(#whiteGrad)"
+    filter="url(#softGlow)"
+  >DG</text>
+
+  <!-- Small Japanese-style red dot top right -->
+  <circle cx="82" cy="18" r="4" fill="#cc0000" filter="url(#redGlow)" opacity="0.9"/>
+
+  <!-- Katakana-inspired corner tick marks -->
+  <polyline points="12,18 12,12 18,12" fill="none" stroke="#ff2222" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <polyline points="88,82 88,88 82,88" fill="none" stroke="#ff2222" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
