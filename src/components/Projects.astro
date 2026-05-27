@@ -2,22 +2,22 @@
 const projects = [
   {
     id: "animated-portfolio",
-    title: "Animated Portfolio",
-    description: "A responsive personal portfolio site with smooth animations, custom cursor, and a loading screen. Built with pure NextJS, Chakra UI, and Three JS.",
-    tags: ["Next.js + Tailwind CSS", "Chakra UI", "Three.js"],
-    github: "https://github.com/ThatAutocrat/Animated-dossier",
-    live: "https://gogoidev.vercel.app/",
+    title: "Pinakas",
+    description: "Pinakas is a real-time kanban project management board built with SvelteKit 5, Lucia auth, and Supabase.Pinakas is a real-time kanban project management board built with SvelteKit 5, Lucia auth, and Supabase. Drag-and-drop tasks, live multi-user updates, checklists, comments, and priority tracking — no fluff, just speed.",
+    tags: ["SvelteKit + Vanilla CSS", "Lucia v3", "Supabase"],
+    github: "https://github.com/ThatAutocrat/Pinakas",
+    live: "https://pinakas.vercel.app/",
     featured: true,
     video: "/assets/project-1.webm",
     caseStudy: {
       role: "Solo Developer & Designer",
       timeline: "3 weeks",
-      overview: "Designed and built a fully animated personal portfolio from scratch to stand out during job applications. The goal was to create something memorable — not just a résumé wrapper, but an actual product.",
-      problem: "Generic portfolio templates blend into the noise. I needed something that communicated both technical depth and design taste before anyone reads a single word.",
-      solution: "Built a custom Three.js particle background that reacts to cursor movement, paired it with a Framer Motion-driven page system and a cinematic loading screen with a glitch effect. Every micro-interaction was deliberate.",
-      stack: ["Next.js 14 (App Router)", "Three.js — 3D canvas background", "Chakra UI — accessible component base", "Framer Motion — page transitions & animations", "Vercel — deployment"],
-      outcomes: ["Got multiple recruiter callouts specifically mentioning the portfolio design", "30+ GitHub stars in the first week", "Loading screen glitch effect went mildly viral on Twitter"],
-      lessons: "Three.js is expensive on mobile. I learned to detect device tier and gracefully degrade to a CSS fallback — performance without sacrificing the wow-factor for desktop users."
+      overview: "Pinakas is a lightweight, real-time project management board built with SvelteKit 5 and Supabase.",
+      problem: "Most project management tools are either overengineered for large teams or too simple to be useful. I wanted something in between — fast, opinionated, and actually pleasant to use.",
+      solution: "Built the entire auth system from scratch using Lucia v3 with bcrypt instead of relying on third-party auth providers. Paired it with a Supabase Postgres backend and SvelteKit's server-side data loading for snappy performance. Added drag-and-drop task ordering, live multi-user updates via Supabase Realtime, and optimistic UI so every action feels instant even before the server confirms it.",
+      stack: ["SvelteKit 5 · Supabase (Postgres + Realtime) · Lucia v3 · Vanilla CSS · Vercel"],
+      outcomes: ["Optimistic UI makes the board feel native, not web-app sluggish", "Full auth flow with sessions, no third-party dependency", "Real-time collaboration works across multiple users with zero page refreshes"],
+      lessons: "Rolling your own auth is educational until it isn't. Lucia abstracts just enough to stay sane without hiding what's actually happening. I'd do it again — but next time I'd add OAuth on day one."
     }
   },
   {
