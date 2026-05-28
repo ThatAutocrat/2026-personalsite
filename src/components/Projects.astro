@@ -22,21 +22,22 @@ const projects = [
   },
   {
     id: "isekainexus",
-    title: "IsekaiNexus",
-    description: "Landing page for a sleek online store for manga fans. Bold hero section with featured titles, genre browsing shelves (shonen, shoujo, seinen), quick-add cart, and a monthly subscription box offer. Dark, red-inspired aesthetic.",
-    tags: ["Next.js", "Astro", "Nuxt 3"],
-    live: "https://isekainexus.cocamady464.workers.dev/",
+    title: "Xrawler",
+    description: "Dead link crawler built for developers. Paste a URL, get a full breakdown of alive, dead, timeout, and bot-blocked links across the page. Built for devs who'd rather know than guess.",
+    tags: ["Hono", "React", "NodeJS"],
+    live: "https://xrawler.vercel.app",
+    github: "https://github.com/ThatAutocrat/xrawler",
     featured: true,
     video: "/assets/project-2.webm",
     caseStudy: {
       role: "Full-Stack Developer",
       timeline: "2 weeks",
-      overview: "IsekaiNexus is a manga e-commerce landing page built to practice multi-framework thinking — the same product concept, approached with different rendering strategies.",
-      problem: "E-commerce sites for niche fandoms often feel either too cheap or too corporate. The challenge was nailing a dark, editorial aesthetic that felt premium without losing the fun energy manga fans expect.",
-      solution: "Used Astro for the static shell for near-zero JS cost on load, dropped in Nuxt 3 islands for interactive cart and filter logic, and Next.js for the subscription flow. The red-and-black palette pulls from classic manga print design.",
-      stack: ["Astro — static site shell, zero-JS by default", "Nuxt 3 — interactive shelf & cart islands", "Next.js — subscription checkout flow", "Cloudflare Workers — edge deployment"],
-      outcomes: ["Sub-100ms TTFB on Cloudflare edge", "LCP under 1.2s despite heavy video hero", "Clean Lighthouse score: 97 Performance, 100 Accessibility"],
-      lessons: "Multi-framework isn't just a flex — it genuinely solved real problems here. Astro handled the content-heavy parts for free, and the interactive bits stayed lean with Nuxt islands."
+      overview: "Xrawler is a developer tool for auditing broken links on any publicly accessible webpage. Built to be fast, honest, and useful — not a scraper, just a link health checker.",
+      problem: "Your site has 200 links. Some are dead. You don't know which ones. Clicking them manually is not a personality trait.",
+      solution: "Fetch the page, extract all anchor tags, batch-check each link concurrently, and return categorized results with response times. Rate limited to prevent abuse, CORS locked to the frontend.",
+      stack: ["React + TypeScript — frontend", "Hono — lightweight backend framework", "Node.js on Render — backend hosting", "Vercel — frontend hosting"],
+      outcomes: ["150 links checked per crawl", "Catches dead, alive, timeout, bot-blocked, and rate-limited responses", "Cloudflare-protected sites will still win. We're honest about it."],
+      lessons: "Some sites don't want to be crawled. Some will block you. Some will gaslight you. Build around it or build a disclaimer — we chose both."
     }
   },
   {
