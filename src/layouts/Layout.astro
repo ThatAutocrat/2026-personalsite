@@ -17,6 +17,15 @@ const { title = "Devashish Gogoi — Developer", description = "Full Stack Devel
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 </head>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js', { scope: '/' });
+    });
+  }
+</script>
+
 <body>
 
   <!-- ─── Glitch Loader ──────────────────────────────────────────────────── -->
