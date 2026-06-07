@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>You're Offline — [DG]</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0d0d0d;
+      --bg2:      #141414;
+      --border:   rgba(255,255,255,0.07);
+      --accent:   #7c6af7;
+      --accent2:  #4fc4cf;
+      --text:     #ebebeb;
+      --muted:    #555;
+      --green:    #28ca41;
+      --pipe:     #1a1a2e;
+      --pipe-b:   rgba(124,106,247,0.35);
+      --pipe-hi:  rgba(124,106,247,0.12);
+      --mono:     'JetBrains Mono', monospace;
+      --display:  'Syne', sans-serif;
+    }
+
+    html, body {
+      width: 100%; height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--mono);
+      overflow: hidden;
+      user-select: none;
+    }
+
+    /* ── MATRIX RAIN CANVAS (background) ── */
+    #matrix-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      opacity: 0.18;
+      pointer-events: none;
+    }
+
+    /* ── SCANLINES ── */
+    .scanlines {
+      position: fixed; inset: 0; z-index: 1;
+      background: repeating-linear-gradient(
+        0deg, transparent, transparent 2px,
+        rgba(0,0,0,0.06) 2px, rgba(0,0,0,0.06) 4px
+      );
+      pointer-events: none;
+    }
+
+    /* ── CORNER DECORATIONS ── */
+    .corner {
+      position: fixed; width: 40px; height: 40px; z-index: 5; pointer-events: none;
+    }
+    .corner--tl { top: 16px; left: 16px; border-top: 1px solid rgba(124,106,247,0.4); border-left: 1px solid rgba(124,106,247,0.4); }
+    .corner--tr { top: 16px; right: 16px; border-top: 1px solid rgba(124,106,247,0.4); border-right: 1px solid rgba(124,106,247,0.4); }
+    .corner--bl { bottom: 16px; left: 16px; border-bottom: 1px solid rgba(124,106,247,0.4); border-left: 1px solid rgba(124,106,247,0.4); }
+    .corner--br { bottom: 16px; right: 16px; border-bottom: 1px solid rgba(124,106,247,0.4); border-right: 1px solid rgba(124,106,247,0.4); }
+
+    /* ── STATUS BAR (top) ── */
+    .status-bar {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 10;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 1.5rem;
+      height: 42px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(13,13,13,0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+    .status-left { display: flex; align-items: center; gap: 1rem; color: var(--muted); }
+    .status-logo { color: var(--text); font-weight: 700; font-size: 12px; letter-spacing: 0.05em; }
+    .status-logo span { color: var(--accent); }
+    .status-dot { width: 5px; height: 5px; border-radius: 50%; background: #e74c3c; box-shadow: 0 0 6px #e74c3c; animation: blink-dot 1.5s ease-in-out infinite; }
+    @keyframes blink-dot { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    .status-right { color: var(--muted); display: flex; align-items: center; gap: 1.2rem; }
+    .status-score-label { color: var(--accent); font-size: 11px; }
+    .status-score { color: var(--text); font-size: 13px; font-weight: 700; min-width: 28px; text-align: right; }
+
+    /* ── GAME WRAPPER ── */
+    #game-wrapper {
+      position: fixed;
+      inset: 0;
+      z-index: 6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ── GAME CANVAS ── */
+    #game-canvas {
+      display: block;
+      border: 1px solid var(--border);
+      box-shadow:
+        0 0 0 1px rgba(124,106,247,0.08),
+        0 0 60px rgba(124,106,247,0.06),
+        0 20px 80px rgba(0,0,0,0.8);
+      image-rendering: pixelated;
+    }
+
+    /* ── OVERLAY SCREENS ── */
+    .overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(13,13,13,0.88);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 20;
+      transition: opacity 0.3s ease;
+    }
+    .overlay.hidden { opacity: 0; pointer-events: none; }
+
+    .overlay-tag {
+      font-size: 9px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1.2rem;
+    }
+
+    .overlay-title {
+      font-family: var(--display);
+      font-size: clamp(2.2rem, 6vw, 3.6rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+    .overlay-title .bracket { color: var(--accent); }
+    .overlay-title .main { color: var(--text); }
+
+    .overlay-subtitle {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      margin-bottom: 2.2rem;
+    }
+
+    .game-stats {
+      display: flex;
+      gap: 2.4rem;
+      margin-bottom: 2rem;
+    }
+    .stat { text-align: center; }
+    .stat-val {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--text);
+      display: block;
+      line-height: 1;
+      margin-bottom: 0.3rem;
+    }
+    .stat-val.accent { color: var(--accent); }
+    .stat-label {
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .cta-btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 13px 28px;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text);
+      border: 1px solid rgba(124,106,247,0.4);
+      background: rgba(124,106,247,0.06);
+      cursor: pointer;
+      clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-btn::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: rgba(124,106,247,0.1);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .cta-btn:hover::before { opacity: 1; }
+    .cta-btn:hover {
+      border-color: rgba(124,106,247,0.8);
+      box-shadow: 0 0 24px rgba(124,106,247,0.2);
+    }
+    .cta-btn:active { transform: scale(0.98); }
+
+    .hint {
+      margin-top: 1.4rem;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .hint kbd {
+      font-family: var(--mono);
+      font-size: 9px;
+      border: 1px solid var(--muted);
+      padding: 1px 5px;
+      border-radius: 3px;
+      color: var(--accent2);
+    }
+
+    /* ── SCORE FLASH ── */
+    .score-flash {
+      position: absolute;
+      top: 30%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+      text-transform: uppercase;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 30;
+      transition: none;
+    }
+    .score-flash.show {
+      animation: flash-up 0.7s ease-out forwards;
+    }
+    @keyframes flash-up {
+      0%   { opacity: 1; transform: translateX(-50%) translateY(0); }
+      100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+    }
+
+    /* ── BACK LINK ── */
+    .back-link {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--accent); }
+    .back-link::before { content: '← '; }
+
+    /* ── CRT FLICKER ── */
+    @keyframes crt-flicker {
+      0%,100% { opacity: 1; }
+      92%      { opacity: 1; }
+      93%      { opacity: 0.85; }
+      94%      { opacity: 1; }
+      96%      { opacity: 0.92; }
+      97%      { opacity: 1; }
+    }
+    #game-canvas { animation: crt-flicker 8s linear infinite; }
+
+    /* mobile */
+    @media (max-width: 500px) {
+      .game-stats { gap: 1.4rem; }
+      .stat-val { font-size: 1.4rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="matrix-canvas"></canvas>
+  <div class="scanlines"></div>
+  <div class="corner corner--tl"></div>
+  <div class="corner corner--tr"></div>
+  <div class="corner corner--bl"></div>
+  <div class="corner corner--br"></div>
+
+  <!-- Status bar -->
+  <div class="status-bar">
+    <div class="status-left">
+      <span class="status-logo"><span>[</span>DG<span>]</span></span>
+      <span class="status-dot"></span>
+      <span id="status-label">NO SIGNAL</span>
+    </div>
+    <div class="status-right">
+      <span class="status-score-label">SCORE</span>
+      <span class="status-score" id="hud-score">0</span>
+    </div>
+  </div>
+
+  <!-- Game wrapper -->
+  <div id="game-wrapper">
+
+    <!-- Game canvas -->
+    <canvas id="game-canvas"></canvas>
+
+    <!-- Score flash -->
+    <div class="score-flash" id="score-flash">+1</div>
+
+    <!-- Start screen -->
+    <div class="overlay" id="screen-start">
+      <p class="overlay-tag">// offline.html — connection lost</p>
+      <h1 class="overlay-title">
+        <span class="bracket">[</span><span class="main">FLAPPY</span><span class="bracket">]</span>
+      </h1>
+      <p class="overlay-subtitle">DG · TERMINAL EDITION</p>
+      <div class="game-stats" id="start-stats" style="display:none">
+        <div class="stat">
+          <span class="stat-val accent" id="stat-best">0</span>
+          <span class="stat-label">Best</span>
+        </div>
+        <div class="stat">
+          <span class="stat-val" id="stat-last">0</span>
+          <span class="stat-label">Last</span>
+        </div>
+        <div class="stat">
+          <span class="stat-val" id="stat-games">0</span>
+          <span class="stat-label">Games</span>
+        </div>
+      </div>
+      <button class="cta-btn" id="btn-start">
+        <span>▶</span> EXECUTE
+      </button>
+      <p class="hint"><kbd>Space</kbd> or <kbd>↑</kbd> to flap · tap on mobile</p>
+    </div>
+
+    <!-- Game over screen -->
+    <div class="overlay hidden" id="screen-gameover">
+      <p class="overlay-tag">// process exited with code 1</p>
+      <h1 class="overlay-title" style="margin-bottom:1rem">
+        <span class="bracket">[</span><span class="main">CRASHED</span><span class="bracket">]</span>
+      </h1>
+      <div class="game-stats">
+        <div class="stat">
+          <span class="stat-val accent" id="go-score">0</span>
+          <span class="stat-label">Score</span>
+        </div>
+        <div class="stat">
+          <span class="stat-val" id="go-best">0</span>
+          <span class="stat-label">Best</span>
+        </div>
+      </div>
+      <button class="cta-btn" id="btn-restart">
+        <span>↺</span> RESTART
+      </button>
+      <p class="hint"><kbd>Space</kbd> or tap to restart</p>
+    </div>
+
+  </div>
+
+  <a class="back-link" href="/" id="back-home">reconnecting…</a>
+
+  <script>
+  (() => {
+    'use strict';
+
+    /* ─────────────────────────────────────────
+       MATRIX RAIN BACKGROUND
+    ───────────────────────────────────────── */
+    const mCanvas = document.getElementById('matrix-canvas');
+    const mCtx    = mCanvas.getContext('2d');
+    let mW, mH, mCols, mDrops;
+    const M_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&<>{}[]|/\\=+-*^~`';
+    const M_EXTRA = '[]{}DGdevhtmlcssjstypescript';
+
+    function mResize() {
+      mW = mCanvas.width  = window.innerWidth;
+      mH = mCanvas.height = window.innerHeight;
+      mCols = Math.floor(mW / 18);
+      mDrops = Array(mCols).fill(1);
+    }
+
+    function mDraw() {
+      mCtx.fillStyle = 'rgba(13,13,13,0.05)';
+      mCtx.fillRect(0, 0, mW, mH);
+      for (let i = 0; i < mCols; i++) {
+        const char = Math.random() > 0.92
+          ? M_EXTRA[Math.floor(Math.random() * M_EXTRA.length)]
+          : M_CHARS[Math.floor(Math.random() * M_CHARS.length)];
+        const bright = Math.random() > 0.97;
+        mCtx.font = `${bright ? 'bold ' : ''}13px 'JetBrains Mono', monospace`;
+        mCtx.fillStyle = bright ? '#ffffff' : '#7c6af7';
+        mCtx.globalAlpha = bright ? 0.7 : 0.35 + Math.random() * 0.2;
+        mCtx.fillText(char, i * 18, mDrops[i] * 18);
+        mCtx.globalAlpha = 1;
+        if (mDrops[i] * 18 > mH && Math.random() > 0.975) mDrops[i] = 0;
+        mDrops[i]++;
+      }
+    }
+
+    window.addEventListener('resize', mResize);
+    mResize();
+    setInterval(mDraw, 42);
+
+
+    /* ─────────────────────────────────────────
+       GAME ENGINE
+    ───────────────────────────────────────── */
+    const canvas  = document.getElementById('game-canvas');
+    const ctx     = canvas.getContext('2d');
+
+    // Responsive sizing
+    const BASE_W  = 420;
+    const BASE_H  = 600;
+    let   SCALE   = 1;
+
+    function sizeCanvas() {
+      const maxW = Math.min(window.innerWidth  - 32, BASE_W);
+      const maxH = Math.min(window.innerHeight - 80, BASE_H);
+      SCALE = Math.min(maxW / BASE_W, maxH / BASE_H);
+      canvas.width  = Math.round(BASE_W * SCALE);
+      canvas.height = Math.round(BASE_H * SCALE);
+      ctx.scale(SCALE, SCALE);
+    }
+
+    window.addEventListener('resize', () => { sizeCanvas(); if (state !== 'playing') drawFrame(); });
+    sizeCanvas();
+
+    // ── CONSTANTS ──
+    const W = BASE_W;
+    const H = BASE_H;
+
+    const GRAVITY      = 0.38;
+    const FLAP_POWER   = -7.2;
+    const PIPE_W       = 52;
+    const PIPE_GAP     = 155;
+    const PIPE_SPEED   = 2.4;
+    const PIPE_INTERVAL= 90;  // frames
+    const BIRD_X       = 90;
+    const BIRD_R       = 16;  // bracket collision radius (approx)
+
+    // ── STATE ──
+    let state       = 'start'; // 'start' | 'playing' | 'dead'
+    let score       = 0;
+    let bestScore   = +localStorage.getItem('flappy_dg_best') || 0;
+    let gamesPlayed = +localStorage.getItem('flappy_dg_games') || 0;
+    let lastScore   = +localStorage.getItem('flappy_dg_last') || 0;
+    let raf;
+
+    // ── BIRD ──
+    let bird = { y: H/2, vy: 0, rotation: 0, wobble: 0 };
+
+    // ── PIPES ──
+    let pipes = [];
+    let frameCount = 0;
+    let pipeFrame  = 0;
+
+    // ── PARTICLES ──
+    let particles = [];
+
+    // ── SCORE FLASH ──
+    const scoreFlashEl = document.getElementById('score-flash');
+    const hudScore     = document.getElementById('hud-score');
+
+    function showScoreFlash() {
+      scoreFlashEl.classList.remove('show');
+      void scoreFlashEl.offsetWidth;
+      scoreFlashEl.classList.add('show');
+    }
+
+    // ── STARS (background starfield) ──
+    const stars = Array.from({length: 45}, () => ({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: Math.random() * 1.2 + 0.3,
+      o: Math.random() * 0.5 + 0.1,
+      f: Math.random() * Math.PI * 2,
+      fs: 0.008 + Math.random() * 0.012,
+    }));
+
+    // ── SCROLLING CODE LINES (bg flavor) ──
+    const CODE_LINES = [
+      'const flap = () => bird.vy = FLAP_POWER;',
+      'if (collision) process.exit(1);',
+      'while (alive) { update(); render(); }',
+      'pipe.x -= PIPE_SPEED;',
+      'score += pipes.passed++;',
+      'ctx.fillStyle = accent;',
+      'requestAnimationFrame(loop);',
+      'localStorage.setItem("best", score);',
+      'bird.y += bird.vy; bird.vy += GRAVITY;',
+      'pipes.push({ x: W, gap: random() });',
+    ];
+    let codeScroll = 0;
+
+    function resetGame() {
+      bird      = { y: H/2, vy: 0, rotation: 0, wobble: 0 };
+      pipes     = [];
+      particles = [];
+      score     = 0;
+      frameCount = 0;
+      pipeFrame  = PIPE_INTERVAL;
+      hudScore.textContent = '0';
+    }
+
+    function spawnPipe() {
+      const gapY = 120 + Math.random() * (H - 240 - PIPE_GAP);
+      pipes.push({
+        x: W,
+        gapY,
+        passed: false,
+        // Syntax tokens to render on pipes
+        tokens: {
+          top:    CODE_LINES[Math.floor(Math.random() * CODE_LINES.length)],
+          bottom: CODE_LINES[Math.floor(Math.random() * CODE_LINES.length)],
+        }
+      });
+    }
+
+    function spawnParticles(x, y, count, color) {
+      for (let i = 0; i < count; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 1 + Math.random() * 4;
+        particles.push({
+          x, y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed - 2,
+          life: 1,
+          decay: 0.04 + Math.random() * 0.04,
+          size: 1 + Math.random() * 3,
+          color,
+        });
+      }
+    }
+
+    // ── DRAW HELPERS ──
+
+    function drawBg() {
+      // Deep dark bg
+      ctx.fillStyle = '#0d0d0d';
+      ctx.fillRect(0, 0, W, H);
+
+      // Grid lines
+      ctx.strokeStyle = 'rgba(124,106,247,0.04)';
+      ctx.lineWidth = 0.5;
+      const gridSize = 30;
+      for (let x = 0; x < W; x += gridSize) {
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+      }
+      for (let y = 0; y < H; y += gridSize) {
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+      }
+
+      // Stars
+      for (const s of stars) {
+        s.f += s.fs;
+        const o = s.o * (0.5 + 0.5 * Math.sin(s.f));
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+        ctx.fillStyle = `rgba(255,255,255,${o})`;
+        ctx.fill();
+      }
+
+      // Scrolling code lines in the background
+      codeScroll += 0.35;
+      if (codeScroll > H) codeScroll = 0;
+      ctx.save();
+      ctx.globalAlpha = 0.045;
+      ctx.font = '9px JetBrains Mono, monospace';
+      ctx.fillStyle = '#7c6af7';
+      for (let i = 0; i < CODE_LINES.length; i++) {
+        const y = ((i * 52 + codeScroll) % (H + 52)) - 26;
+        ctx.fillText(CODE_LINES[i], 8, y);
+      }
+      ctx.restore();
+    }
+
+    function drawPipe(pipe) {
+      const topH    = pipe.gapY;
+      const botY    = pipe.gapY + PIPE_GAP;
+      const botH    = H - botY;
+      const px      = pipe.x;
+
+      // ── Top pipe ──
+      // Main body
+      ctx.fillStyle = '#11112a';
+      ctx.strokeStyle = 'rgba(124,106,247,0.5)';
+      ctx.lineWidth = 1;
+      ctx.fillRect(px, 0, PIPE_W, topH);
+      ctx.strokeRect(px + 0.5, 0.5, PIPE_W - 1, topH - 1);
+
+      // Top pipe cap
+      const capH = 18;
+      ctx.fillStyle = '#1a1a3e';
+      ctx.fillRect(px - 5, topH - capH, PIPE_W + 10, capH);
+      ctx.strokeStyle = 'rgba(124,106,247,0.7)';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(px - 5 + 0.5, topH - capH + 0.5, PIPE_W + 9, capH - 1);
+
+      // Accent left stripe
+      ctx.fillStyle = 'rgba(124,106,247,0.35)';
+      ctx.fillRect(px, 0, 2, topH);
+
+      // Token text on top pipe
+      if (topH > 40) {
+        ctx.save();
+        ctx.globalAlpha = 0.28;
+        ctx.font = '7px JetBrains Mono, monospace';
+        ctx.fillStyle = '#7c6af7';
+        ctx.save();
+        ctx.translate(px + PIPE_W/2, topH/2);
+        ctx.rotate(-Math.PI/2);
+        const txt = pipe.tokens.top;
+        ctx.fillText(txt.substring(0, Math.floor(topH / 7)), -topH/2 + 4, 0);
+        ctx.restore();
+        ctx.restore();
+      }
+
+      // ── Bottom pipe ──
+      ctx.fillStyle = '#11112a';
+      ctx.strokeStyle = 'rgba(124,106,247,0.5)';
+      ctx.lineWidth = 1;
+      ctx.fillRect(px, botY, PIPE_W, botH);
+      ctx.strokeRect(px + 0.5, botY + 0.5, PIPE_W - 1, botH - 1);
+
+      // Bottom pipe cap
+      ctx.fillStyle = '#1a1a3e';
+      ctx.fillRect(px - 5, botY, PIPE_W + 10, capH);
+      ctx.strokeStyle = 'rgba(124,106,247,0.7)';
+      ctx.strokeRect(px - 5 + 0.5, botY + 0.5, PIPE_W + 9, capH - 1);
+
+      // Accent left stripe
+      ctx.fillStyle = 'rgba(124,106,247,0.35)';
+      ctx.fillRect(px, botY, 2, botH);
+
+      // Gap glow
+      const grd = ctx.createLinearGradient(px, pipe.gapY, px, pipe.gapY + PIPE_GAP);
+      grd.addColorStop(0,   'rgba(124,106,247,0.12)');
+      grd.addColorStop(0.5, 'rgba(79,196,207,0.06)');
+      grd.addColorStop(1,   'rgba(124,106,247,0.12)');
+      ctx.fillStyle = grd;
+      ctx.fillRect(px, pipe.gapY, PIPE_W, PIPE_GAP);
+    }
+
+    function drawBird() {
+      const bx  = BIRD_X;
+      const by  = bird.y;
+      const rot = Math.max(-0.6, Math.min(1.0, bird.rotation));
+
+      ctx.save();
+      ctx.translate(bx, by);
+      ctx.rotate(rot);
+
+      // Glow behind bird
+      const glowR = ctx.createRadialGradient(0, 0, 0, 0, 0, 28);
+      glowR.addColorStop(0,   'rgba(124,106,247,0.28)');
+      glowR.addColorStop(0.5, 'rgba(124,106,247,0.08)');
+      glowR.addColorStop(1,   'rgba(124,106,247,0)');
+      ctx.fillStyle = glowR;
+      ctx.beginPath();
+      ctx.arc(0, 0, 28, 0, Math.PI * 2);
+      ctx.fill();
+
+      // ── DRAW [DG] BIRD ──
+      // Background pill
+      ctx.fillStyle = 'rgba(13,13,13,0.92)';
+      ctx.strokeStyle = 'rgba(124,106,247,0.9)';
+      ctx.lineWidth = 1.5;
+      const pw = 42, ph = 24;
+      roundRect(ctx, -pw/2, -ph/2, pw, ph, 4);
+      ctx.fill();
+      ctx.stroke();
+
+      // Animated cursor blink
+      bird.wobble = (bird.wobble || 0) + 0.15;
+      const showCursor = Math.sin(bird.wobble) > 0;
+
+      // [DG] text
+      ctx.font = 'bold 13px JetBrains Mono, monospace';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+
+      // bracket in accent
+      ctx.fillStyle = '#7c6af7';
+      ctx.fillText('[', -14, 0);
+      ctx.fillText(']', 14, 0);
+
+      // DG in white
+      ctx.fillStyle = '#ebebeb';
+      ctx.fillText('DG', 0, 0);
+
+      // Trailing cursor
+      if (showCursor) {
+        ctx.fillStyle = '#7c6af7';
+        ctx.fillText('_', 19, 0);
+      }
+
+      // Pixel-art exhaust "jets" when flapping
+      if (bird.vy < -1) {
+        ctx.globalAlpha = Math.min(1, (-bird.vy / 8));
+        ctx.fillStyle = '#4fc4cf';
+        for (let i = 0; i < 3; i++) {
+          const ox = -pw/2 - 4 - i * 4;
+          const oy = (-4 + i * 4) * (Math.random() > 0.5 ? 1 : -1);
+          ctx.fillRect(ox, oy, 2, 2);
+        }
+        ctx.globalAlpha = 1;
+      }
+
+      ctx.restore();
+    }
+
+    function roundRect(c, x, y, w, h, r) {
+      c.beginPath();
+      c.moveTo(x + r, y);
+      c.lineTo(x + w - r, y);
+      c.quadraticCurveTo(x + w, y, x + w, y + r);
+      c.lineTo(x + w, y + h - r);
+      c.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+      c.lineTo(x + r, y + h);
+      c.quadraticCurveTo(x, y + h, x, y + h - r);
+      c.lineTo(x, y + r);
+      c.quadraticCurveTo(x, y, x + r, y);
+      c.closePath();
+    }
+
+    function drawParticles() {
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x    += p.vx;
+        p.y    += p.vy;
+        p.vy   += 0.15;
+        p.life -= p.decay;
+        if (p.life <= 0) { particles.splice(i, 1); continue; }
+        ctx.globalAlpha = p.life;
+        ctx.fillStyle = p.color;
+        ctx.fillRect(p.x, p.y, p.size, p.size);
+        ctx.globalAlpha = 1;
+      }
+    }
+
+    function drawHUD() {
+      // Score display inline in canvas
+      ctx.font = 'bold 28px JetBrains Mono, monospace';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+
+      // Shadow
+      ctx.fillStyle = 'rgba(0,0,0,0.6)';
+      ctx.fillText(score, W/2 + 1, 54);
+
+      ctx.fillStyle = '#ebebeb';
+      ctx.fillText(score, W/2, 53);
+
+      // Best score hint
+      if (bestScore > 0 && score < bestScore) {
+        ctx.font = '9px JetBrains Mono, monospace';
+        ctx.fillStyle = 'rgba(124,106,247,0.5)';
+        ctx.fillText(`BEST: ${bestScore}`, W/2, 76);
+      }
+
+      ctx.textAlign = 'left';
+    }
+
+    function drawDeathOverlay() {
+      // Screen-shake effect: handled by CSS on canvas wrapper
+    }
+
+    // ── GROUND LINE ──
+    function drawGround() {
+      ctx.strokeStyle = 'rgba(124,106,247,0.25)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.moveTo(0, H - 1);
+      ctx.lineTo(W, H - 1);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Scan line at ground
+      ctx.fillStyle = 'rgba(124,106,247,0.04)';
+      ctx.fillRect(0, H - 8, W, 8);
+    }
+
+    // ── COLLISION ──
+    function checkCollision() {
+      const bx = BIRD_X;
+      const by = bird.y;
+      const bW = 22; // half-width for collision (slightly forgiving)
+      const bH = 12; // half-height
+
+      // Ground / ceiling
+      if (by - bH < 0 || by + bH > H) return true;
+
+      for (const pipe of pipes) {
+        const px = pipe.x;
+        const pr = px + PIPE_W;
+
+        // X overlap
+        if (bx + bW > px && bx - bW < pr) {
+          // Y overlap (top pipe or bottom pipe)
+          if (by - bH < pipe.gapY || by + bH > pipe.gapY + PIPE_GAP) {
+            return true;
+          }
+        }
+      }
+      return false;
+    }
+
+    // ── FLAP ──
+    function flap() {
+      if (state === 'start') { startGame(); return; }
+      if (state === 'dead')  { scheduleRestart(); return; }
+      bird.vy = FLAP_POWER;
+      spawnParticles(BIRD_X - 28, bird.y, 6, '#7c6af7');
+      spawnParticles(BIRD_X - 28, bird.y, 3, '#4fc4cf');
+    }
+
+    let restartTimeout = null;
+    function scheduleRestart() {
+      if (restartTimeout) return;
+      restartTimeout = setTimeout(() => { restartTimeout = null; restartGame(); }, 100);
+    }
+
+    // ── GAME LOOP ──
+    function update() {
+      frameCount++;
+      pipeFrame++;
+
+      // Physics
+      bird.vy       += GRAVITY;
+      bird.y        += bird.vy;
+      bird.rotation  = bird.vy * 0.07;
+
+      // Spawn pipes
+      if (pipeFrame >= PIPE_INTERVAL) {
+        spawnPipe();
+        pipeFrame = 0;
+      }
+
+      // Move & score pipes
+      for (let i = pipes.length - 1; i >= 0; i--) {
+        const p = pipes[i];
+        p.x -= PIPE_SPEED + score * 0.012; // speed ramps up
+
+        // Score
+        if (!p.passed && p.x + PIPE_W < BIRD_X) {
+          p.passed = true;
+          score++;
+          hudScore.textContent = score;
+          showScoreFlash();
+          spawnParticles(BIRD_X, bird.y, 8, '#28ca41');
+        }
+
+        // Cleanup off-screen
+        if (p.x + PIPE_W < -10) pipes.splice(i, 1);
+      }
+
+      // Collision
+      if (checkCollision()) {
+        die();
+      }
+    }
+
+    function drawFrame() {
+      // Reset transform for clear
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.scale(SCALE, SCALE);
+
+      drawBg();
+      for (const p of pipes) drawPipe(p);
+      drawGround();
+      drawBird();
+      drawParticles();
+      if (state === 'playing') drawHUD();
+    }
+
+    function loop() {
+      if (state !== 'playing') return;
+      update();
+      drawFrame();
+      raf = requestAnimationFrame(loop);
+    }
+
+    function startGame() {
+      state = 'playing';
+      resetGame();
+      hideScreen('screen-start');
+      hideScreen('screen-gameover');
+      document.getElementById('status-label').textContent = 'RUNNING';
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(loop);
+    }
+
+    function die() {
+      state = 'dead';
+      cancelAnimationFrame(raf);
+
+      // Explosion particles
+      spawnParticles(BIRD_X, bird.y, 30, '#e74c3c');
+      spawnParticles(BIRD_X, bird.y, 20, '#7c6af7');
+      spawnParticles(BIRD_X, bird.y, 15, '#ffffff');
+
+      // Draw death frame once
+      drawFrame();
+
+      // Save stats
+      gamesPlayed++;
+      lastScore = score;
+      if (score > bestScore) bestScore = score;
+      localStorage.setItem('flappy_dg_best',  bestScore);
+      localStorage.setItem('flappy_dg_games', gamesPlayed);
+      localStorage.setItem('flappy_dg_last',  lastScore);
+
+      // Update UI
+      document.getElementById('go-score').textContent = score;
+      document.getElementById('go-best').textContent  = bestScore;
+      document.getElementById('status-label').textContent = 'CRASHED';
+
+      // Shake canvas
+      canvas.style.animation = 'none';
+      canvas.style.transform = 'translateX(4px)';
+      setTimeout(() => { canvas.style.transform = 'translateX(-4px)'; }, 60);
+      setTimeout(() => { canvas.style.transform = 'translateX(2px)';  }, 120);
+      setTimeout(() => { canvas.style.transform = 'translateX(0)';    canvas.style.animation = 'crt-flicker 8s linear infinite'; }, 180);
+
+      setTimeout(() => showScreen('screen-gameover'), 500);
+    }
+
+    function restartGame() {
+      hideScreen('screen-gameover');
+      startGame();
+    }
+
+    function showScreen(id) {
+      document.getElementById(id).classList.remove('hidden');
+    }
+    function hideScreen(id) {
+      document.getElementById(id).classList.add('hidden');
+    }
+
+    // ── INITIAL STATE DRAW (idle animation) ──
+    let idleRaf;
+    function idleLoop() {
+      if (state !== 'start') return;
+      bird.wobble = (bird.wobble || 0) + 0.04;
+      bird.y = H/2 + Math.sin(bird.wobble * 1.5) * 12;
+      drawFrame();
+      idleRaf = requestAnimationFrame(idleLoop);
+    }
+
+    // ── CONTROLS ──
+    document.addEventListener('keydown', (e) => {
+      if (e.code === 'Space' || e.code === 'ArrowUp') {
+        e.preventDefault();
+        flap();
+      }
+    });
+
+    canvas.addEventListener('click',     () => flap());
+    canvas.addEventListener('touchstart', (e) => { e.preventDefault(); flap(); }, { passive: false });
+
+    document.getElementById('btn-start').addEventListener('click',   startGame);
+    document.getElementById('btn-restart').addEventListener('click', restartGame);
+
+    // ── INIT ──
+    // Show best/last/games if played before
+    if (gamesPlayed > 0) {
+      document.getElementById('start-stats').style.display = 'flex';
+      document.getElementById('stat-best').textContent  = bestScore;
+      document.getElementById('stat-last').textContent  = lastScore;
+      document.getElementById('stat-games').textContent = gamesPlayed;
+    }
+
+    // Check if we're actually offline
+    const backLink = document.getElementById('back-home');
+    if (!navigator.onLine) {
+      backLink.textContent = 'reconnecting…';
+    }
+    window.addEventListener('online', () => {
+      backLink.textContent = '← back online — go home';
+      backLink.href = '/';
+    });
+
+    // Start idle draw
+    drawFrame();
+    idleLoop();
+  })();
+  </script>
+</body>
+</html>
