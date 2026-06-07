@@ -1,13 +1,13 @@
 /* ─────────────────────────────────────────────────────────────
-   [DG] OFFLINE SERVICE WORKER
-   Intercepts navigation requests when the user is offline
-   and serves the Flappy [DG] game instead of a browser error.
+   [DG] OFFLINE SERVICE WORKER — v2
+   Uses a live connectivity probe instead of relying on fetch()
+   to fail, so it works even when pages are HTTP-cached by CDN.
 ───────────────────────────────────────────────────────────── */
 
-const CACHE_NAME    = 'dg-offline-v1';
-const OFFLINE_PAGE  = '/offline.html';
+const CACHE_NAME   = 'dg-offline-v2';
+const OFFLINE_PAGE = '/offline.html';
+const PROBE_URL    = '/?_sw-probe=' + Date.now(); // cache-busted probe
 
-// Assets to pre-cache so the game works fully offline
 const PRECACHE = [
   OFFLINE_PAGE,
   '/favicon.svg',
@@ -16,30 +16,46 @@ const PRECACHE = [
 /* ── INSTALL: pre-cache the offline game ── */
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(PRECACHE);
-    }).then(() => self.skipWaiting())
+    caches.open(CACHE_NAME)
+      .then((cache) => cache.addAll(PRECACHE))
+      .then(() => self.skipWaiting())
   );
 });
 
-/* ── ACTIVATE: clean up old caches ── */
+/* ── ACTIVATE: wipe old caches, claim clients immediately ── */
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(
-        keys
-          .filter((k) => k !== CACHE_NAME)
-          .map((k) => caches.delete(k))
+    caches.keys()
+      .then((keys) =>
+        Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)))
       )
-    ).then(() => self.clients.claim())
+      .then(() => self.clients.claim())
   );
 });
 
-/* ── FETCH: serve offline game on navigation failure ── */
+/* ── CONNECTIVITY PROBE ──────────────────────────────────────
+   Sends a HEAD request with cache: 'no-store' to bypass every
+   layer of HTTP caching (Vercel CDN, browser cache, SW cache).
+   Returns true if the network is reachable.
+─────────────────────────────────────────────────────────────*/
+async function isOnline() {
+  try {
+    const res = await fetch('/?_sw-probe', {
+      method: 'HEAD',
+      cache: 'no-store',          // bypass HTTP cache
+      headers: { 'SW-Probe': '1' } // easy to filter in server logs
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
+/* ── FETCH: intercept all same-origin navigations ── */
 self.addEventListener('fetch', (event) => {
   const { request } = event;
 
-  // Only intercept same-origin navigation requests
+  // Only care about page navigations, not assets/API calls
   if (
     request.mode !== 'navigate' ||
     !request.url.startsWith(self.location.origin)
@@ -48,25 +64,29 @@ self.addEventListener('fetch', (event) => {
   }
 
   event.respondWith(
-    fetch(request)
-      .then((response) => {
-        // Request succeeded — clone and cache the response, then return it
-        if (response && response.status === 200 && response.type === 'basic') {
-          const cloned = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(request, cloned));
-        }
-        return response;
-      })
-      .catch(() => {
-        // Network failed — serve the offline game
-        return caches.match(OFFLINE_PAGE).then((cached) => {
-          if (cached) return cached;
-          // Fallback minimal response if cache is somehow empty
-          return new Response(
-            '<html><body><h1>[DG] — You are offline</h1></body></html>',
-            { headers: { 'Content-Type': 'text/html' } }
-          );
-        });
-      })
+    isOnline().then((online) => {
+      if (online) {
+        // We're online — do the real fetch and cache the response
+        return fetch(request).then((response) => {
+          if (response && response.status === 200 && response.type === 'basic') {
+            caches.open(CACHE_NAME).then((c) => c.put(request, response.clone()));
+          }
+          return response;
+        }).catch(() => serveOffline());
+      } else {
+        // Confirmed offline — serve the game
+        return serveOffline();
+      }
+    })
   );
 });
+
+function serveOffline() {
+  return caches.match(OFFLINE_PAGE).then((cached) => {
+    if (cached) return cached;
+    return new Response(
+      '<html><body style="background:#0d0d0d;color:#ebebeb;font-family:monospace;display:flex;align-items:center;justify-content:center;height:100vh;margin:0"><h1>[DG] — offline</h1></body></html>',
+      { headers: { 'Content-Type': 'text/html' } }
+    );
+  });
+}
