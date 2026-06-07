@@ -12,19 +12,14 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:       #0d0d0d;
-      --bg2:      #141414;
-      --border:   rgba(255,255,255,0.07);
-      --accent:   #7c6af7;
-      --accent2:  #4fc4cf;
-      --text:     #ebebeb;
-      --muted:    #555;
-      --green:    #28ca41;
-      --pipe:     #1a1a2e;
-      --pipe-b:   rgba(124,106,247,0.35);
-      --pipe-hi:  rgba(124,106,247,0.12);
-      --mono:     'JetBrains Mono', monospace;
-      --display:  'Syne', sans-serif;
+      --bg:      #0d0d0d;
+      --border:  rgba(255,255,255,0.07);
+      --accent:  #7c6af7;
+      --accent2: #4fc4cf;
+      --text:    #ebebeb;
+      --muted:   #555;
+      --mono:    'JetBrains Mono', monospace;
+      --display: 'Syne', sans-serif;
     }
 
     html, body {
@@ -36,244 +31,151 @@
       user-select: none;
     }
 
-    /* ── MATRIX RAIN CANVAS (background) ── */
     #matrix-canvas {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      opacity: 0.18;
-      pointer-events: none;
+      position: fixed; inset: 0; z-index: 0;
+      opacity: 0.18; pointer-events: none;
     }
 
-    /* ── SCANLINES ── */
     .scanlines {
-      position: fixed; inset: 0; z-index: 1;
+      position: fixed; inset: 0; z-index: 1; pointer-events: none;
       background: repeating-linear-gradient(
         0deg, transparent, transparent 2px,
         rgba(0,0,0,0.06) 2px, rgba(0,0,0,0.06) 4px
       );
-      pointer-events: none;
     }
 
-    /* ── CORNER DECORATIONS ── */
     .corner {
       position: fixed; width: 40px; height: 40px; z-index: 5; pointer-events: none;
     }
-    .corner--tl { top: 16px; left: 16px; border-top: 1px solid rgba(124,106,247,0.4); border-left: 1px solid rgba(124,106,247,0.4); }
-    .corner--tr { top: 16px; right: 16px; border-top: 1px solid rgba(124,106,247,0.4); border-right: 1px solid rgba(124,106,247,0.4); }
-    .corner--bl { bottom: 16px; left: 16px; border-bottom: 1px solid rgba(124,106,247,0.4); border-left: 1px solid rgba(124,106,247,0.4); }
-    .corner--br { bottom: 16px; right: 16px; border-bottom: 1px solid rgba(124,106,247,0.4); border-right: 1px solid rgba(124,106,247,0.4); }
+    .corner--tl { top:16px; left:16px;   border-top:1px solid rgba(124,106,247,0.4); border-left:1px solid rgba(124,106,247,0.4); }
+    .corner--tr { top:16px; right:16px;  border-top:1px solid rgba(124,106,247,0.4); border-right:1px solid rgba(124,106,247,0.4); }
+    .corner--bl { bottom:16px; left:16px;  border-bottom:1px solid rgba(124,106,247,0.4); border-left:1px solid rgba(124,106,247,0.4); }
+    .corner--br { bottom:16px; right:16px; border-bottom:1px solid rgba(124,106,247,0.4); border-right:1px solid rgba(124,106,247,0.4); }
 
-    /* ── STATUS BAR (top) ── */
     .status-bar {
-      position: fixed; top: 0; left: 0; right: 0;
-      z-index: 10;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 1.5rem;
-      height: 42px;
+      position: fixed; top:0; left:0; right:0; z-index:10;
+      display:flex; align-items:center; justify-content:space-between;
+      padding: 0 1.5rem; height: 42px;
       border-bottom: 1px solid var(--border);
       background: rgba(13,13,13,0.7);
       backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      font-size: 10px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
+      font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
     }
-    .status-left { display: flex; align-items: center; gap: 1rem; color: var(--muted); }
-    .status-logo { color: var(--text); font-weight: 700; font-size: 12px; letter-spacing: 0.05em; }
-    .status-logo span { color: var(--accent); }
-    .status-dot { width: 5px; height: 5px; border-radius: 50%; background: #e74c3c; box-shadow: 0 0 6px #e74c3c; animation: blink-dot 1.5s ease-in-out infinite; }
+    .status-left  { display:flex; align-items:center; gap:1rem; color:var(--muted); }
+    .status-logo  { color:var(--text); font-weight:700; font-size:12px; letter-spacing:0.05em; }
+    .status-logo span { color:var(--accent); }
+    .status-dot   { width:5px; height:5px; border-radius:50%; background:#e74c3c; box-shadow:0 0 6px #e74c3c; animation:blink-dot 1.5s ease-in-out infinite; }
     @keyframes blink-dot { 0%,100%{opacity:1} 50%{opacity:0.3} }
-    .status-right { color: var(--muted); display: flex; align-items: center; gap: 1.2rem; }
-    .status-score-label { color: var(--accent); font-size: 11px; }
-    .status-score { color: var(--text); font-size: 13px; font-weight: 700; min-width: 28px; text-align: right; }
+    .status-right { color:var(--muted); display:flex; align-items:center; gap:1.2rem; }
+    .status-score-label { color:var(--accent); font-size:11px; }
+    .status-score { color:var(--text); font-size:13px; font-weight:700; min-width:28px; text-align:right; }
 
-    /* ── GAME WRAPPER ── */
     #game-wrapper {
-      position: fixed;
-      inset: 0;
-      z-index: 6;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      position: fixed; inset: 0; z-index: 6;
+      display: flex; align-items: center; justify-content: center;
     }
 
-    /* ── GAME CANVAS ── */
     #game-canvas {
       display: block;
       border: 1px solid var(--border);
       box-shadow:
         0 0 0 1px rgba(124,106,247,0.08),
-        0 0 60px rgba(124,106,247,0.06),
+        0 0 80px rgba(124,106,247,0.07),
         0 20px 80px rgba(0,0,0,0.8);
-      image-rendering: pixelated;
     }
 
-    /* ── OVERLAY SCREENS ── */
-    .overlay {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background: rgba(13,13,13,0.88);
-      backdrop-filter: blur(4px);
-      -webkit-backdrop-filter: blur(4px);
-      z-index: 20;
-      transition: opacity 0.3s ease;
-    }
-    .overlay.hidden { opacity: 0; pointer-events: none; }
-
-    .overlay-tag {
-      font-size: 9px;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 1.2rem;
-    }
-
-    .overlay-title {
-      font-family: var(--display);
-      font-size: clamp(2.2rem, 6vw, 3.6rem);
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      line-height: 1;
-      margin-bottom: 0.5rem;
-    }
-    .overlay-title .bracket { color: var(--accent); }
-    .overlay-title .main { color: var(--text); }
-
-    .overlay-subtitle {
-      font-size: 11px;
-      letter-spacing: 0.12em;
-      color: var(--muted);
-      margin-bottom: 2.2rem;
-    }
-
-    .game-stats {
-      display: flex;
-      gap: 2.4rem;
-      margin-bottom: 2rem;
-    }
-    .stat { text-align: center; }
-    .stat-val {
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: var(--text);
-      display: block;
-      line-height: 1;
-      margin-bottom: 0.3rem;
-    }
-    .stat-val.accent { color: var(--accent); }
-    .stat-label {
-      font-size: 9px;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    .cta-btn {
-      display: inline-flex; align-items: center; gap: 10px;
-      padding: 13px 28px;
-      font-family: var(--mono);
-      font-size: 11px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--text);
-      border: 1px solid rgba(124,106,247,0.4);
-      background: rgba(124,106,247,0.06);
-      cursor: pointer;
-      clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
-      transition: all 0.2s;
-      position: relative;
-      overflow: hidden;
-    }
-    .cta-btn::before {
-      content: '';
-      position: absolute; inset: 0;
-      background: rgba(124,106,247,0.1);
-      opacity: 0;
-      transition: opacity 0.2s;
-    }
-    .cta-btn:hover::before { opacity: 1; }
-    .cta-btn:hover {
-      border-color: rgba(124,106,247,0.8);
-      box-shadow: 0 0 24px rgba(124,106,247,0.2);
-    }
-    .cta-btn:active { transform: scale(0.98); }
-
-    .hint {
-      margin-top: 1.4rem;
-      font-size: 9px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-    .hint kbd {
-      font-family: var(--mono);
-      font-size: 9px;
-      border: 1px solid var(--muted);
-      padding: 1px 5px;
-      border-radius: 3px;
-      color: var(--accent2);
-    }
-
-    /* ── SCORE FLASH ── */
-    .score-flash {
-      position: absolute;
-      top: 30%;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 11px;
-      letter-spacing: 0.2em;
-      color: var(--accent);
-      text-transform: uppercase;
-      opacity: 0;
-      pointer-events: none;
-      z-index: 30;
-      transition: none;
-    }
-    .score-flash.show {
-      animation: flash-up 0.7s ease-out forwards;
-    }
-    @keyframes flash-up {
-      0%   { opacity: 1; transform: translateX(-50%) translateY(0); }
-      100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
-    }
-
-    /* ── BACK LINK ── */
-    .back-link {
-      position: fixed;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 10;
-      font-size: 9px;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--muted);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-    .back-link:hover { color: var(--accent); }
-    .back-link::before { content: '← '; }
-
-    /* ── CRT FLICKER ── */
     @keyframes crt-flicker {
-      0%,100% { opacity: 1; }
-      92%      { opacity: 1; }
-      93%      { opacity: 0.85; }
-      94%      { opacity: 1; }
-      96%      { opacity: 0.92; }
-      97%      { opacity: 1; }
+      0%,100%{opacity:1} 92%{opacity:1} 93%{opacity:0.85} 94%{opacity:1} 96%{opacity:0.92} 97%{opacity:1}
     }
     #game-canvas { animation: crt-flicker 8s linear infinite; }
 
-    /* mobile */
-    @media (max-width: 500px) {
-      .game-stats { gap: 1.4rem; }
-      .stat-val { font-size: 1.4rem; }
+    .overlay {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      background: rgba(13,13,13,0.9);
+      backdrop-filter: blur(6px);
+      z-index: 20;
+      transition: opacity 0.25s ease;
+    }
+    .overlay.hidden { opacity:0; pointer-events:none; }
+
+    .overlay-tag {
+      font-size:9px; letter-spacing:0.25em; text-transform:uppercase;
+      color:var(--muted); margin-bottom:1.2rem;
+    }
+    .overlay-title {
+      font-family: var(--display);
+      font-size: clamp(2.2rem, 6vw, 3.6rem);
+      font-weight: 800; letter-spacing: -0.02em; line-height:1;
+      margin-bottom: 0.5rem;
+    }
+    .overlay-title .bracket { color:var(--accent); }
+    .overlay-title .main    { color:var(--text); }
+    .overlay-subtitle {
+      font-size:11px; letter-spacing:0.12em; color:var(--muted); margin-bottom:2.2rem;
+    }
+    .game-stats { display:flex; gap:2.4rem; margin-bottom:2rem; }
+    .stat { text-align:center; }
+    .stat-val {
+      font-size:1.8rem; font-weight:700; color:var(--text);
+      display:block; line-height:1; margin-bottom:0.3rem;
+    }
+    .stat-val.accent { color:var(--accent); }
+    .stat-label { font-size:9px; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); }
+
+    .cta-btn {
+      display:inline-flex; align-items:center; gap:10px;
+      padding:13px 28px;
+      font-family:var(--mono); font-size:11px;
+      letter-spacing:0.18em; text-transform:uppercase;
+      color:var(--text);
+      border:1px solid rgba(124,106,247,0.4);
+      background:rgba(124,106,247,0.06);
+      cursor:pointer;
+      clip-path:polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+      transition:all 0.2s; position:relative; overflow:hidden;
+    }
+    .cta-btn::before {
+      content:''; position:absolute; inset:0;
+      background:rgba(124,106,247,0.1); opacity:0; transition:opacity 0.2s;
+    }
+    .cta-btn:hover::before { opacity:1; }
+    .cta-btn:hover { border-color:rgba(124,106,247,0.8); box-shadow:0 0 24px rgba(124,106,247,0.2); }
+    .cta-btn:active { transform:scale(0.98); }
+
+    .hint {
+      margin-top:1.4rem; font-size:9px; letter-spacing:0.18em;
+      text-transform:uppercase; color:var(--muted);
+    }
+    .hint kbd {
+      font-family:var(--mono); font-size:9px;
+      border:1px solid var(--muted); padding:1px 5px;
+      border-radius:3px; color:var(--accent2);
+    }
+
+    .score-flash {
+      position:absolute; top:28%; left:50%;
+      transform:translateX(-50%);
+      font-size:11px; letter-spacing:0.2em; color:var(--accent);
+      text-transform:uppercase; opacity:0; pointer-events:none; z-index:30;
+    }
+    .score-flash.show { animation:flash-up 0.7s ease-out forwards; }
+    @keyframes flash-up {
+      0%   { opacity:1; transform:translateX(-50%) translateY(0); }
+      100% { opacity:0; transform:translateX(-50%) translateY(-22px); }
+    }
+
+    .back-link {
+      position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
+      z-index:10; font-size:9px; letter-spacing:0.2em; text-transform:uppercase;
+      color:var(--muted); text-decoration:none; transition:color 0.2s;
+    }
+    .back-link:hover { color:var(--accent); }
+    .back-link::before { content:'← '; }
+
+    @media (max-width:500px) {
+      .game-stats { gap:1.4rem; }
+      .stat-val   { font-size:1.4rem; }
     }
   </style>
 </head>
@@ -286,7 +188,6 @@
   <div class="corner corner--bl"></div>
   <div class="corner corner--br"></div>
 
-  <!-- Status bar -->
   <div class="status-bar">
     <div class="status-left">
       <span class="status-logo"><span>[</span>DG<span>]</span></span>
@@ -299,16 +200,10 @@
     </div>
   </div>
 
-  <!-- Game wrapper -->
   <div id="game-wrapper">
-
-    <!-- Game canvas -->
     <canvas id="game-canvas"></canvas>
-
-    <!-- Score flash -->
     <div class="score-flash" id="score-flash">+1</div>
 
-    <!-- Start screen -->
     <div class="overlay" id="screen-start">
       <p class="overlay-tag">// offline.html — connection lost</p>
       <h1 class="overlay-title">
@@ -329,13 +224,10 @@
           <span class="stat-label">Games</span>
         </div>
       </div>
-      <button class="cta-btn" id="btn-start">
-        <span>▶</span> EXECUTE
-      </button>
+      <button class="cta-btn" id="btn-start"><span>▶</span> EXECUTE</button>
       <p class="hint"><kbd>Space</kbd> or <kbd>↑</kbd> to flap · tap on mobile</p>
     </div>
 
-    <!-- Game over screen -->
     <div class="overlay hidden" id="screen-gameover">
       <p class="overlay-tag">// process exited with code 1</p>
       <h1 class="overlay-title" style="margin-bottom:1rem">
@@ -351,12 +243,9 @@
           <span class="stat-label">Best</span>
         </div>
       </div>
-      <button class="cta-btn" id="btn-restart">
-        <span>↺</span> RESTART
-      </button>
+      <button class="cta-btn" id="btn-restart"><span>↺</span> RESTART</button>
       <p class="hint"><kbd>Space</kbd> or tap to restart</p>
     </div>
-
   </div>
 
   <a class="back-link" href="/" id="back-home">reconnecting…</a>
@@ -365,9 +254,9 @@
   (() => {
     'use strict';
 
-    /* ─────────────────────────────────────────
-       MATRIX RAIN BACKGROUND
-    ───────────────────────────────────────── */
+    /* ══════════════════════════════════════════
+       MATRIX RAIN
+    ══════════════════════════════════════════ */
     const mCanvas = document.getElementById('matrix-canvas');
     const mCtx    = mCanvas.getContext('2d');
     let mW, mH, mCols, mDrops;
@@ -380,86 +269,123 @@
       mCols = Math.floor(mW / 18);
       mDrops = Array(mCols).fill(1);
     }
-
     function mDraw() {
       mCtx.fillStyle = 'rgba(13,13,13,0.05)';
       mCtx.fillRect(0, 0, mW, mH);
       for (let i = 0; i < mCols; i++) {
-        const char = Math.random() > 0.92
+        const ch = Math.random() > 0.92
           ? M_EXTRA[Math.floor(Math.random() * M_EXTRA.length)]
           : M_CHARS[Math.floor(Math.random() * M_CHARS.length)];
         const bright = Math.random() > 0.97;
         mCtx.font = `${bright ? 'bold ' : ''}13px 'JetBrains Mono', monospace`;
         mCtx.fillStyle = bright ? '#ffffff' : '#7c6af7';
         mCtx.globalAlpha = bright ? 0.7 : 0.35 + Math.random() * 0.2;
-        mCtx.fillText(char, i * 18, mDrops[i] * 18);
+        mCtx.fillText(ch, i * 18, mDrops[i] * 18);
         mCtx.globalAlpha = 1;
         if (mDrops[i] * 18 > mH && Math.random() > 0.975) mDrops[i] = 0;
         mDrops[i]++;
       }
     }
-
     window.addEventListener('resize', mResize);
     mResize();
     setInterval(mDraw, 42);
 
 
-    /* ─────────────────────────────────────────
+    /* ══════════════════════════════════════════
        GAME ENGINE
-    ───────────────────────────────────────── */
-    const canvas  = document.getElementById('game-canvas');
-    const ctx     = canvas.getContext('2d');
+    ══════════════════════════════════════════ */
+    const canvas = document.getElementById('game-canvas');
+    const ctx    = canvas.getContext('2d');
 
-    // Responsive sizing
-    const BASE_W  = 420;
-    const BASE_H  = 600;
-    let   SCALE   = 1;
+    // ── Canvas sizing — bigger but matrix still bleeds around ──
+    const BASE_W = 500;
+    const BASE_H = 660;
+    let   SCALE  = 1;
 
     function sizeCanvas() {
-      const maxW = Math.min(window.innerWidth  - 32, BASE_W);
-      const maxH = Math.min(window.innerHeight - 80, BASE_H);
+      const maxW = Math.min(window.innerWidth  - 48, BASE_W);
+      const maxH = Math.min(window.innerHeight - 90, BASE_H);
       SCALE = Math.min(maxW / BASE_W, maxH / BASE_H);
       canvas.width  = Math.round(BASE_W * SCALE);
       canvas.height = Math.round(BASE_H * SCALE);
+      ctx.setTransform(1,0,0,1,0,0);
       ctx.scale(SCALE, SCALE);
     }
-
     window.addEventListener('resize', () => { sizeCanvas(); if (state !== 'playing') drawFrame(); });
     sizeCanvas();
 
-    // ── CONSTANTS ──
     const W = BASE_W;
     const H = BASE_H;
 
-    const GRAVITY      = 0.38;
-    const FLAP_POWER   = -7.2;
-    const PIPE_W       = 52;
-    const PIPE_GAP     = 155;
-    const PIPE_SPEED   = 2.4;
-    const PIPE_INTERVAL= 90;  // frames
-    const BIRD_X       = 90;
-    const BIRD_R       = 16;  // bracket collision radius (approx)
+    // ── Physics — tighter, snappier feel ──
+    const GRAVITY       = 0.50;
+    const FLAP_POWER    = -8.5;
+    const PIPE_W        = 56;
+    const PIPE_GAP_BASE = 162;   // base gap
+    const PIPE_SPEED    = 2.6;
+    const PIPE_INTERVAL = 95;
+    const BIRD_X        = 100;
 
-    // ── STATE ──
-    let state       = 'start'; // 'start' | 'playing' | 'dead'
+    // Short cap labels — visible, horizontal, on the pipe mouth
+    const CAP_TOKENS = [
+      '</gap>', '<gap>', '{...}', '[ ]', 'null',
+      'NaN', 'void', '???', '404', 'err',
+      '//fix', 'TODO', '0xff', '>>>',
+    ];
+
+    // Sarcastic milestone messages every 10 pipes
+    const ROAST_MSGS = {
+      10:  "ok beginner's luck",
+      20:  "still going? really?",
+      30:  "bro has no wifi AND no life",
+      40:  "fix your router my guy",
+      50:  "i'm telling your recruiter",
+      60:  "skill issue incoming",
+      70:  "this is getting embarrassing",
+      80:  "are you even human??",
+      90:  "ok i give up roasting you",
+      100: "literally unhinged behavior",
+    };
+    function getRoast(s) {
+      if (s <= 100 && ROAST_MSGS[s]) return ROAST_MSGS[s];
+      if (s > 100 && s % 10 === 0) {
+        const extras = [
+          "still here? seriously?",
+          "go touch grass",
+          "bro discovered flappy bird",
+          "internet's back btw",
+          "i have no more insults",
+          "you broke the game mentally",
+        ];
+        return extras[Math.floor(Math.random() * extras.length)];
+      }
+      return null;
+    }
+
+    // ── State ──
+    let state       = 'start';
     let score       = 0;
-    let bestScore   = +localStorage.getItem('flappy_dg_best') || 0;
+    let bestScore   = +localStorage.getItem('flappy_dg_best')  || 0;
     let gamesPlayed = +localStorage.getItem('flappy_dg_games') || 0;
-    let lastScore   = +localStorage.getItem('flappy_dg_last') || 0;
+    let lastScore   = +localStorage.getItem('flappy_dg_last')  || 0;
     let raf;
 
-    // ── BIRD ──
-    let bird = { y: H/2, vy: 0, rotation: 0, wobble: 0 };
+    // ── Bird ──
+    // scaleX/scaleY for squash-stretch
+    let bird = { y: H/2, vy: 0, rotation: 0, wobble: 0, scaleX: 1, scaleY: 1 };
 
-    // ── PIPES ──
-    let pipes = [];
+    // ── Pipes ──
+    let pipes      = [];
     let frameCount = 0;
     let pipeFrame  = 0;
 
-    // ── PARTICLES ──
+    // ── Particles ──
     let particles = [];
 
-    // ── SCORE FLASH ──
+    // ── Roast bubble ──
+    let roastBubble = null; // { text, life, maxLife }
+
+    // ── DOM refs ──
     const scoreFlashEl = document.getElementById('score-flash');
     const hudScore     = document.getElementById('hud-score');
 
@@ -469,52 +395,60 @@
       scoreFlashEl.classList.add('show');
     }
 
-    // ── STARS (background starfield) ──
-    const stars = Array.from({length: 45}, () => ({
-      x: Math.random() * W,
-      y: Math.random() * H,
-      r: Math.random() * 1.2 + 0.3,
-      o: Math.random() * 0.5 + 0.1,
-      f: Math.random() * Math.PI * 2,
+    // ── Stars ──
+    const stars = Array.from({length: 55}, () => ({
+      x:  Math.random() * W,
+      y:  Math.random() * H,
+      r:  Math.random() * 1.3 + 0.3,
+      o:  Math.random() * 0.5 + 0.1,
+      f:  Math.random() * Math.PI * 2,
       fs: 0.008 + Math.random() * 0.012,
     }));
 
-    // ── SCROLLING CODE LINES (bg flavor) ──
-    const CODE_LINES = [
+    // ── Scrolling bg code ──
+    const BG_CODE = [
       'const flap = () => bird.vy = FLAP_POWER;',
       'if (collision) process.exit(1);',
       'while (alive) { update(); render(); }',
       'pipe.x -= PIPE_SPEED;',
       'score += pipes.passed++;',
-      'ctx.fillStyle = accent;',
       'requestAnimationFrame(loop);',
-      'localStorage.setItem("best", score);',
       'bird.y += bird.vy; bird.vy += GRAVITY;',
-      'pipes.push({ x: W, gap: random() });',
+      'pipes.push({ x: W, gapY: random() });',
+      'ctx.drawImage(bird, bx, by);',
+      'if (!online) serveGame();',
     ];
     let codeScroll = 0;
 
+    // ── Helpers ──
+    function randFrom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
     function resetGame() {
-      bird      = { y: H/2, vy: 0, rotation: 0, wobble: 0 };
+      bird      = { y: H/2, vy: 0, rotation: 0, wobble: 0, scaleX: 1, scaleY: 1 };
       pipes     = [];
       particles = [];
-      score     = 0;
+      roastBubble = null;
+      score      = 0;
       frameCount = 0;
-      pipeFrame  = PIPE_INTERVAL;
+      pipeFrame  = PIPE_INTERVAL; // spawn first pipe immediately
       hudScore.textContent = '0';
     }
 
+    function pipeGap() {
+      // Gap widens slightly at higher scores so speed increase stays fair
+      return PIPE_GAP_BASE + Math.min(score * 0.6, 40);
+    }
+
     function spawnPipe() {
-      const gapY = 120 + Math.random() * (H - 240 - PIPE_GAP);
+      const gap  = pipeGap();
+      const gapY = 110 + Math.random() * (H - 220 - gap);
       pipes.push({
-        x: W,
+        x: W + 10,
         gapY,
+        gap,
         passed: false,
-        // Syntax tokens to render on pipes
-        tokens: {
-          top:    CODE_LINES[Math.floor(Math.random() * CODE_LINES.length)],
-          bottom: CODE_LINES[Math.floor(Math.random() * CODE_LINES.length)],
-        }
+        capTop:    randFrom(CAP_TOKENS),
+        capBottom: randFrom(CAP_TOKENS),
       });
     }
 
@@ -534,175 +468,163 @@
       }
     }
 
-    // ── DRAW HELPERS ──
-
+    /* ── DRAW: background ── */
     function drawBg() {
-      // Deep dark bg
       ctx.fillStyle = '#0d0d0d';
       ctx.fillRect(0, 0, W, H);
 
-      // Grid lines
-      ctx.strokeStyle = 'rgba(124,106,247,0.04)';
+      // Subtle grid
+      ctx.strokeStyle = 'rgba(124,106,247,0.035)';
       ctx.lineWidth = 0.5;
-      const gridSize = 30;
-      for (let x = 0; x < W; x += gridSize) {
-        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
-      }
-      for (let y = 0; y < H; y += gridSize) {
-        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
-      }
+      const gs = 32;
+      for (let x = 0; x < W; x += gs) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+      for (let y = 0; y < H; y += gs) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
 
       // Stars
       for (const s of stars) {
         s.f += s.fs;
         const o = s.o * (0.5 + 0.5 * Math.sin(s.f));
-        ctx.beginPath();
-        ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
-        ctx.fillStyle = `rgba(255,255,255,${o})`;
-        ctx.fill();
+        ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+        ctx.fillStyle = `rgba(255,255,255,${o})`; ctx.fill();
       }
 
-      // Scrolling code lines in the background
-      codeScroll += 0.35;
+      // Scrolling bg code
+      codeScroll += 0.3;
       if (codeScroll > H) codeScroll = 0;
       ctx.save();
-      ctx.globalAlpha = 0.045;
+      ctx.globalAlpha = 0.04;
       ctx.font = '9px JetBrains Mono, monospace';
       ctx.fillStyle = '#7c6af7';
-      for (let i = 0; i < CODE_LINES.length; i++) {
-        const y = ((i * 52 + codeScroll) % (H + 52)) - 26;
-        ctx.fillText(CODE_LINES[i], 8, y);
+      for (let i = 0; i < BG_CODE.length; i++) {
+        const y = ((i * 58 + codeScroll) % (H + 58)) - 29;
+        ctx.fillText(BG_CODE[i], 10, y);
       }
       ctx.restore();
     }
 
+    /* ── DRAW: pipe ── */
     function drawPipe(pipe) {
-      const topH    = pipe.gapY;
-      const botY    = pipe.gapY + PIPE_GAP;
-      const botH    = H - botY;
-      const px      = pipe.x;
+      const topH  = pipe.gapY;
+      const botY  = pipe.gapY + pipe.gap;
+      const botH  = H - botY;
+      const px    = pipe.x;
+      const capH  = 20;
 
-      // ── Top pipe ──
-      // Main body
-      ctx.fillStyle = '#11112a';
-      ctx.strokeStyle = 'rgba(124,106,247,0.5)';
-      ctx.lineWidth = 1;
+      // ── Top pipe body ──
+      ctx.fillStyle = '#0f0f26';
       ctx.fillRect(px, 0, PIPE_W, topH);
-      ctx.strokeRect(px + 0.5, 0.5, PIPE_W - 1, topH - 1);
-
-      // Top pipe cap
-      const capH = 18;
-      ctx.fillStyle = '#1a1a3e';
-      ctx.fillRect(px - 5, topH - capH, PIPE_W + 10, capH);
-      ctx.strokeStyle = 'rgba(124,106,247,0.7)';
-      ctx.lineWidth = 1;
-      ctx.strokeRect(px - 5 + 0.5, topH - capH + 0.5, PIPE_W + 9, capH - 1);
-
-      // Accent left stripe
-      ctx.fillStyle = 'rgba(124,106,247,0.35)';
+      // left accent stripe
+      ctx.fillStyle = 'rgba(124,106,247,0.4)';
       ctx.fillRect(px, 0, 2, topH);
-
-      // Token text on top pipe
-      if (topH > 40) {
-        ctx.save();
-        ctx.globalAlpha = 0.28;
-        ctx.font = '7px JetBrains Mono, monospace';
-        ctx.fillStyle = '#7c6af7';
-        ctx.save();
-        ctx.translate(px + PIPE_W/2, topH/2);
-        ctx.rotate(-Math.PI/2);
-        const txt = pipe.tokens.top;
-        ctx.fillText(txt.substring(0, Math.floor(topH / 7)), -topH/2 + 4, 0);
-        ctx.restore();
-        ctx.restore();
-      }
-
-      // ── Bottom pipe ──
-      ctx.fillStyle = '#11112a';
-      ctx.strokeStyle = 'rgba(124,106,247,0.5)';
+      // right subtle edge
+      ctx.fillStyle = 'rgba(255,255,255,0.03)';
+      ctx.fillRect(px + PIPE_W - 2, 0, 2, topH);
+      // border
+      ctx.strokeStyle = 'rgba(124,106,247,0.45)';
       ctx.lineWidth = 1;
-      ctx.fillRect(px, botY, PIPE_W, botH);
-      ctx.strokeRect(px + 0.5, botY + 0.5, PIPE_W - 1, botH - 1);
+      ctx.strokeRect(px + 0.5, 0.5, PIPE_W - 1, topH);
 
-      // Bottom pipe cap
-      ctx.fillStyle = '#1a1a3e';
-      ctx.fillRect(px - 5, botY, PIPE_W + 10, capH);
-      ctx.strokeStyle = 'rgba(124,106,247,0.7)';
-      ctx.strokeRect(px - 5 + 0.5, botY + 0.5, PIPE_W + 9, capH - 1);
+      // ── Top pipe cap (mouth) ──
+      ctx.fillStyle = '#1c1c40';
+      ctx.fillRect(px - 6, topH - capH, PIPE_W + 12, capH);
+      ctx.strokeStyle = 'rgba(124,106,247,0.75)';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(px - 6 + 0.5, topH - capH + 0.5, PIPE_W + 11, capH - 1);
+      // Cap label — horizontal, centered, readable
+      ctx.font = 'bold 9px JetBrains Mono, monospace';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = 'rgba(124,106,247,0.85)';
+      ctx.fillText(pipe.capTop, px + PIPE_W/2, topH - capH/2);
 
-      // Accent left stripe
-      ctx.fillStyle = 'rgba(124,106,247,0.35)';
-      ctx.fillRect(px, botY, 2, botH);
+      // ── Bottom pipe cap (mouth) ──
+      ctx.fillStyle = '#1c1c40';
+      ctx.fillRect(px - 6, botY, PIPE_W + 12, capH);
+      ctx.strokeStyle = 'rgba(124,106,247,0.75)';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(px - 6 + 0.5, botY + 0.5, PIPE_W + 11, capH - 1);
+      ctx.font = 'bold 9px JetBrains Mono, monospace';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = 'rgba(124,106,247,0.85)';
+      ctx.fillText(pipe.capBottom, px + PIPE_W/2, botY + capH/2);
 
-      // Gap glow
-      const grd = ctx.createLinearGradient(px, pipe.gapY, px, pipe.gapY + PIPE_GAP);
-      grd.addColorStop(0,   'rgba(124,106,247,0.12)');
-      grd.addColorStop(0.5, 'rgba(79,196,207,0.06)');
-      grd.addColorStop(1,   'rgba(124,106,247,0.12)');
+      // ── Bottom pipe body ──
+      ctx.fillStyle = '#0f0f26';
+      ctx.fillRect(px, botY + capH, PIPE_W, botH - capH);
+      ctx.fillStyle = 'rgba(124,106,247,0.4)';
+      ctx.fillRect(px, botY + capH, 2, botH - capH);
+      ctx.fillStyle = 'rgba(255,255,255,0.03)';
+      ctx.fillRect(px + PIPE_W - 2, botY + capH, 2, botH - capH);
+      ctx.strokeStyle = 'rgba(124,106,247,0.45)';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(px + 0.5, botY + capH + 0.5, PIPE_W - 1, botH - capH - 1);
+
+      // ── Gap ambient glow ──
+      const grd = ctx.createLinearGradient(px, pipe.gapY, px, pipe.gapY + pipe.gap);
+      grd.addColorStop(0,   'rgba(124,106,247,0.1)');
+      grd.addColorStop(0.5, 'rgba(79,196,207,0.04)');
+      grd.addColorStop(1,   'rgba(124,106,247,0.1)');
       ctx.fillStyle = grd;
-      ctx.fillRect(px, pipe.gapY, PIPE_W, PIPE_GAP);
+      ctx.fillRect(px, pipe.gapY, PIPE_W, pipe.gap);
+
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'alphabetic';
     }
 
+    /* ── DRAW: bird with squash-stretch ── */
     function drawBird() {
       const bx  = BIRD_X;
       const by  = bird.y;
-      const rot = Math.max(-0.6, Math.min(1.0, bird.rotation));
+      const rot = Math.max(-0.55, Math.min(1.1, bird.vy * 0.072));
 
       ctx.save();
       ctx.translate(bx, by);
       ctx.rotate(rot);
+      ctx.scale(bird.scaleX, bird.scaleY);
 
-      // Glow behind bird
-      const glowR = ctx.createRadialGradient(0, 0, 0, 0, 0, 28);
-      glowR.addColorStop(0,   'rgba(124,106,247,0.28)');
+      // Glow
+      const glowR = ctx.createRadialGradient(0, 0, 0, 0, 0, 30);
+      glowR.addColorStop(0,   'rgba(124,106,247,0.30)');
       glowR.addColorStop(0.5, 'rgba(124,106,247,0.08)');
       glowR.addColorStop(1,   'rgba(124,106,247,0)');
       ctx.fillStyle = glowR;
-      ctx.beginPath();
-      ctx.arc(0, 0, 28, 0, Math.PI * 2);
-      ctx.fill();
+      ctx.beginPath(); ctx.arc(0, 0, 30, 0, Math.PI*2); ctx.fill();
 
-      // ── DRAW [DG] BIRD ──
-      // Background pill
-      ctx.fillStyle = 'rgba(13,13,13,0.92)';
-      ctx.strokeStyle = 'rgba(124,106,247,0.9)';
+      // Pill background
+      const pw = 44, ph = 24;
+      ctx.fillStyle = 'rgba(13,13,13,0.94)';
+      ctx.strokeStyle = 'rgba(124,106,247,0.92)';
       ctx.lineWidth = 1.5;
-      const pw = 42, ph = 24;
-      roundRect(ctx, -pw/2, -ph/2, pw, ph, 4);
+      roundRect(ctx, -pw/2, -ph/2, pw, ph, 5);
       ctx.fill();
       ctx.stroke();
-
-      // Animated cursor blink
-      bird.wobble = (bird.wobble || 0) + 0.15;
-      const showCursor = Math.sin(bird.wobble) > 0;
 
       // [DG] text
       ctx.font = 'bold 13px JetBrains Mono, monospace';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-
-      // bracket in accent
       ctx.fillStyle = '#7c6af7';
-      ctx.fillText('[', -14, 0);
-      ctx.fillText(']', 14, 0);
-
-      // DG in white
+      ctx.fillText('[', -15, 0.5);
+      ctx.fillText(']', 15, 0.5);
       ctx.fillStyle = '#ebebeb';
-      ctx.fillText('DG', 0, 0);
+      ctx.fillText('DG', 0, 0.5);
 
-      // Trailing cursor
-      if (showCursor) {
+      // Blinking cursor
+      bird.wobble = (bird.wobble || 0) + 0.16;
+      if (Math.sin(bird.wobble) > 0) {
         ctx.fillStyle = '#7c6af7';
-        ctx.fillText('_', 19, 0);
+        ctx.fillText('_', 20, 0.5);
       }
 
-      // Pixel-art exhaust "jets" when flapping
-      if (bird.vy < -1) {
-        ctx.globalAlpha = Math.min(1, (-bird.vy / 8));
-        ctx.fillStyle = '#4fc4cf';
-        for (let i = 0; i < 3; i++) {
-          const ox = -pw/2 - 4 - i * 4;
-          const oy = (-4 + i * 4) * (Math.random() > 0.5 ? 1 : -1);
+      // Exhaust jets on flap
+      if (bird.vy < -2) {
+        const alpha = Math.min(1, (-bird.vy - 2) / 6);
+        ctx.globalAlpha = alpha;
+        for (let i = 0; i < 4; i++) {
+          const ox = -pw/2 - 4 - i * 5;
+          const oy = (Math.random() - 0.5) * 10;
+          ctx.fillStyle = i % 2 === 0 ? '#7c6af7' : '#4fc4cf';
           ctx.fillRect(ox, oy, 2, 2);
         }
         ctx.globalAlpha = 1;
@@ -711,127 +633,180 @@
       ctx.restore();
     }
 
-    function roundRect(c, x, y, w, h, r) {
-      c.beginPath();
-      c.moveTo(x + r, y);
-      c.lineTo(x + w - r, y);
-      c.quadraticCurveTo(x + w, y, x + w, y + r);
-      c.lineTo(x + w, y + h - r);
-      c.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
-      c.lineTo(x + r, y + h);
-      c.quadraticCurveTo(x, y + h, x, y + h - r);
-      c.lineTo(x, y + r);
-      c.quadraticCurveTo(x, y, x + r, y);
-      c.closePath();
+    /* ── DRAW: roast speech bubble next to bird ── */
+    function drawRoastBubble() {
+      if (!roastBubble) return;
+      roastBubble.life -= 1;
+      if (roastBubble.life <= 0) { roastBubble = null; return; }
+
+      const alpha = Math.min(1, roastBubble.life / 30); // fade out last 30 frames
+      const bx    = BIRD_X;
+      const by    = bird.y;
+      const text  = roastBubble.text;
+      const pad   = 8;
+      const fSize = 10;
+
+      ctx.font = `${fSize}px JetBrains Mono, monospace`;
+      const tw = ctx.measureText(text).width;
+      const bw = tw + pad * 2;
+      const bh = fSize + pad * 2;
+
+      // Position: right of bird, slightly above
+      let bx2 = bx + 30;
+      let by2 = by - 40;
+      // Clamp to canvas
+      if (bx2 + bw > W - 8) bx2 = bx - bw - 18;
+      if (by2 - bh < 8)     by2 = by + 20;
+
+      ctx.save();
+      ctx.globalAlpha = alpha;
+
+      // Bubble body
+      ctx.fillStyle = 'rgba(13,13,13,0.92)';
+      ctx.strokeStyle = '#7c6af7';
+      ctx.lineWidth = 1;
+      roundRect(ctx, bx2, by2 - bh, bw, bh, 4);
+      ctx.fill();
+      ctx.stroke();
+
+      // Tail pointing left toward bird
+      const tailX = bx2;
+      const tailY = by2 - bh/2;
+      ctx.beginPath();
+      ctx.moveTo(tailX, tailY - 5);
+      ctx.lineTo(tailX - 8, tailY);
+      ctx.lineTo(tailX, tailY + 5);
+      ctx.fillStyle = 'rgba(13,13,13,0.92)';
+      ctx.fill();
+      ctx.strokeStyle = '#7c6af7';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(tailX, tailY - 4);
+      ctx.lineTo(tailX - 7, tailY);
+      ctx.lineTo(tailX, tailY + 4);
+      ctx.stroke();
+
+      // Text
+      ctx.fillStyle = '#ebebeb';
+      ctx.font = `${fSize}px JetBrains Mono, monospace`;
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(text, bx2 + pad, by2 - bh/2);
+
+      ctx.restore();
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'alphabetic';
     }
 
+    /* ── DRAW: particles ── */
     function drawParticles() {
       for (let i = particles.length - 1; i >= 0; i--) {
         const p = particles[i];
-        p.x    += p.vx;
-        p.y    += p.vy;
-        p.vy   += 0.15;
+        p.x    += p.vx; p.y += p.vy; p.vy += 0.15;
         p.life -= p.decay;
         if (p.life <= 0) { particles.splice(i, 1); continue; }
         ctx.globalAlpha = p.life;
         ctx.fillStyle = p.color;
         ctx.fillRect(p.x, p.y, p.size, p.size);
-        ctx.globalAlpha = 1;
       }
+      ctx.globalAlpha = 1;
     }
 
+    /* ── DRAW: HUD score ── */
     function drawHUD() {
-      // Score display inline in canvas
-      ctx.font = 'bold 28px JetBrains Mono, monospace';
+      ctx.font = 'bold 30px JetBrains Mono, monospace';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-
-      // Shadow
-      ctx.fillStyle = 'rgba(0,0,0,0.6)';
-      ctx.fillText(score, W/2 + 1, 54);
-
+      ctx.fillStyle = 'rgba(0,0,0,0.55)';
+      ctx.fillText(score, W/2 + 1, 56);
       ctx.fillStyle = '#ebebeb';
-      ctx.fillText(score, W/2, 53);
-
-      // Best score hint
+      ctx.fillText(score, W/2, 55);
       if (bestScore > 0 && score < bestScore) {
         ctx.font = '9px JetBrains Mono, monospace';
         ctx.fillStyle = 'rgba(124,106,247,0.5)';
-        ctx.fillText(`BEST: ${bestScore}`, W/2, 76);
+        ctx.fillText(`BEST: ${bestScore}`, W/2, 78);
       }
-
       ctx.textAlign = 'left';
+      ctx.textBaseline = 'alphabetic';
     }
 
-    function drawDeathOverlay() {
-      // Screen-shake effect: handled by CSS on canvas wrapper
-    }
-
-    // ── GROUND LINE ──
+    /* ── DRAW: ground line ── */
     function drawGround() {
-      ctx.strokeStyle = 'rgba(124,106,247,0.25)';
+      ctx.strokeStyle = 'rgba(124,106,247,0.22)';
       ctx.lineWidth = 1;
-      ctx.setLineDash([4, 4]);
-      ctx.beginPath();
-      ctx.moveTo(0, H - 1);
-      ctx.lineTo(W, H - 1);
-      ctx.stroke();
+      ctx.setLineDash([5, 5]);
+      ctx.beginPath(); ctx.moveTo(0, H-1); ctx.lineTo(W, H-1); ctx.stroke();
       ctx.setLineDash([]);
-
-      // Scan line at ground
-      ctx.fillStyle = 'rgba(124,106,247,0.04)';
-      ctx.fillRect(0, H - 8, W, 8);
+      ctx.fillStyle = 'rgba(124,106,247,0.03)';
+      ctx.fillRect(0, H-8, W, 8);
     }
 
-    // ── COLLISION ──
-    function checkCollision() {
-      const bx = BIRD_X;
-      const by = bird.y;
-      const bW = 22; // half-width for collision (slightly forgiving)
-      const bH = 12; // half-height
+    /* ── UTIL: rounded rect ── */
+    function roundRect(c, x, y, w, h, r) {
+      c.beginPath();
+      c.moveTo(x+r, y);
+      c.lineTo(x+w-r, y); c.quadraticCurveTo(x+w, y, x+w, y+r);
+      c.lineTo(x+w, y+h-r); c.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
+      c.lineTo(x+r, y+h); c.quadraticCurveTo(x, y+h, x, y+h-r);
+      c.lineTo(x, y+r); c.quadraticCurveTo(x, y, x+r, y);
+      c.closePath();
+    }
 
-      // Ground / ceiling
+    /* ── COLLISION ── */
+    function checkCollision() {
+      const by = bird.y;
+      const bW = 21, bH = 11; // forgiving hitbox
+
       if (by - bH < 0 || by + bH > H) return true;
 
-      for (const pipe of pipes) {
-        const px = pipe.x;
-        const pr = px + PIPE_W;
-
-        // X overlap
-        if (bx + bW > px && bx - bW < pr) {
-          // Y overlap (top pipe or bottom pipe)
-          if (by - bH < pipe.gapY || by + bH > pipe.gapY + PIPE_GAP) {
-            return true;
-          }
+      for (const p of pipes) {
+        if (BIRD_X + bW > p.x && BIRD_X - bW < p.x + PIPE_W) {
+          if (by - bH < p.gapY || by + bH > p.gapY + p.gap) return true;
         }
       }
       return false;
     }
 
-    // ── FLAP ──
+    /* ── FLAP ── */
     function flap() {
       if (state === 'start') { startGame(); return; }
       if (state === 'dead')  { scheduleRestart(); return; }
       bird.vy = FLAP_POWER;
-      spawnParticles(BIRD_X - 28, bird.y, 6, '#7c6af7');
+      // Squash on flap: compress vertically, stretch horizontally
+      bird.scaleX = 1.25;
+      bird.scaleY = 0.78;
+      spawnParticles(BIRD_X - 28, bird.y, 5, '#7c6af7');
       spawnParticles(BIRD_X - 28, bird.y, 3, '#4fc4cf');
     }
 
     let restartTimeout = null;
     function scheduleRestart() {
       if (restartTimeout) return;
-      restartTimeout = setTimeout(() => { restartTimeout = null; restartGame(); }, 100);
+      restartTimeout = setTimeout(() => { restartTimeout = null; restartGame(); }, 120);
     }
 
-    // ── GAME LOOP ──
+    /* ── PIPE SPEED — ramps gently, capped ── */
+    function currentPipeSpeed() {
+      return PIPE_SPEED + Math.min(score * 0.018, 2.2);
+    }
+
+    /* ── UPDATE ── */
     function update() {
       frameCount++;
       pipeFrame++;
 
       // Physics
-      bird.vy       += GRAVITY;
-      bird.y        += bird.vy;
-      bird.rotation  = bird.vy * 0.07;
+      bird.vy += GRAVITY;
+      bird.y  += bird.vy;
+
+      // Squash-stretch recovery — lerp back to 1,1
+      bird.scaleX += (1 - bird.scaleX) * 0.18;
+      bird.scaleY += (1 - bird.scaleY) * 0.18;
+      // Stretch on fall
+      if (bird.vy > 3) {
+        bird.scaleX = 0.88;
+        bird.scaleY = 1.18;
+      }
 
       // Spawn pipes
       if (pipeFrame >= PIPE_INTERVAL) {
@@ -840,32 +815,33 @@
       }
 
       // Move & score pipes
+      const spd = currentPipeSpeed();
       for (let i = pipes.length - 1; i >= 0; i--) {
         const p = pipes[i];
-        p.x -= PIPE_SPEED + score * 0.012; // speed ramps up
+        p.x -= spd;
 
-        // Score
         if (!p.passed && p.x + PIPE_W < BIRD_X) {
           p.passed = true;
           score++;
           hudScore.textContent = score;
           showScoreFlash();
-          spawnParticles(BIRD_X, bird.y, 8, '#28ca41');
+          spawnParticles(BIRD_X, bird.y, 7, '#28ca41');
+
+          // Roast every 10 pipes
+          const msg = getRoast(score);
+          if (msg) {
+            roastBubble = { text: msg, life: 180, maxLife: 180 };
+          }
         }
-
-        // Cleanup off-screen
-        if (p.x + PIPE_W < -10) pipes.splice(i, 1);
+        if (p.x + PIPE_W < -20) pipes.splice(i, 1);
       }
 
-      // Collision
-      if (checkCollision()) {
-        die();
-      }
+      if (checkCollision()) die();
     }
 
+    /* ── DRAW FRAME ── */
     function drawFrame() {
-      // Reset transform for clear
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.setTransform(1,0,0,1,0,0);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.scale(SCALE, SCALE);
 
@@ -873,10 +849,12 @@
       for (const p of pipes) drawPipe(p);
       drawGround();
       drawBird();
+      drawRoastBubble();
       drawParticles();
       if (state === 'playing') drawHUD();
     }
 
+    /* ── LOOP ── */
     function loop() {
       if (state !== 'playing') return;
       update();
@@ -884,6 +862,7 @@
       raf = requestAnimationFrame(loop);
     }
 
+    /* ── START / DIE / RESTART ── */
     function startGame() {
       state = 'playing';
       resetGame();
@@ -898,15 +877,11 @@
       state = 'dead';
       cancelAnimationFrame(raf);
 
-      // Explosion particles
-      spawnParticles(BIRD_X, bird.y, 30, '#e74c3c');
-      spawnParticles(BIRD_X, bird.y, 20, '#7c6af7');
-      spawnParticles(BIRD_X, bird.y, 15, '#ffffff');
-
-      // Draw death frame once
+      spawnParticles(BIRD_X, bird.y, 28, '#e74c3c');
+      spawnParticles(BIRD_X, bird.y, 18, '#7c6af7');
+      spawnParticles(BIRD_X, bird.y, 12, '#ffffff');
       drawFrame();
 
-      // Save stats
       gamesPlayed++;
       lastScore = score;
       if (score > bestScore) bestScore = score;
@@ -914,19 +889,22 @@
       localStorage.setItem('flappy_dg_games', gamesPlayed);
       localStorage.setItem('flappy_dg_last',  lastScore);
 
-      // Update UI
       document.getElementById('go-score').textContent = score;
       document.getElementById('go-best').textContent  = bestScore;
       document.getElementById('status-label').textContent = 'CRASHED';
 
-      // Shake canvas
+      // Screen shake
       canvas.style.animation = 'none';
+      const shakes = [[4,0],['-4px',60],[2,120],[0,180]];
       canvas.style.transform = 'translateX(4px)';
       setTimeout(() => { canvas.style.transform = 'translateX(-4px)'; }, 60);
       setTimeout(() => { canvas.style.transform = 'translateX(2px)';  }, 120);
-      setTimeout(() => { canvas.style.transform = 'translateX(0)';    canvas.style.animation = 'crt-flicker 8s linear infinite'; }, 180);
+      setTimeout(() => {
+        canvas.style.transform = 'translateX(0)';
+        canvas.style.animation = 'crt-flicker 8s linear infinite';
+      }, 190);
 
-      setTimeout(() => showScreen('screen-gameover'), 500);
+      setTimeout(() => showScreen('screen-gameover'), 480);
     }
 
     function restartGame() {
@@ -934,39 +912,28 @@
       startGame();
     }
 
-    function showScreen(id) {
-      document.getElementById(id).classList.remove('hidden');
-    }
-    function hideScreen(id) {
-      document.getElementById(id).classList.add('hidden');
-    }
+    function showScreen(id) { document.getElementById(id).classList.remove('hidden'); }
+    function hideScreen(id) { document.getElementById(id).classList.add('hidden'); }
 
-    // ── INITIAL STATE DRAW (idle animation) ──
-    let idleRaf;
+    /* ── IDLE ANIMATION ── */
     function idleLoop() {
       if (state !== 'start') return;
-      bird.wobble = (bird.wobble || 0) + 0.04;
-      bird.y = H/2 + Math.sin(bird.wobble * 1.5) * 12;
+      bird.wobble = (bird.wobble || 0) + 0.038;
+      bird.y = H/2 + Math.sin(bird.wobble * 1.5) * 14;
       drawFrame();
-      idleRaf = requestAnimationFrame(idleLoop);
+      requestAnimationFrame(idleLoop);
     }
 
-    // ── CONTROLS ──
+    /* ── CONTROLS ── */
     document.addEventListener('keydown', (e) => {
-      if (e.code === 'Space' || e.code === 'ArrowUp') {
-        e.preventDefault();
-        flap();
-      }
+      if (e.code === 'Space' || e.code === 'ArrowUp') { e.preventDefault(); flap(); }
     });
-
-    canvas.addEventListener('click',     () => flap());
+    canvas.addEventListener('click', () => flap());
     canvas.addEventListener('touchstart', (e) => { e.preventDefault(); flap(); }, { passive: false });
-
     document.getElementById('btn-start').addEventListener('click',   startGame);
     document.getElementById('btn-restart').addEventListener('click', restartGame);
 
-    // ── INIT ──
-    // Show best/last/games if played before
+    /* ── INIT ── */
     if (gamesPlayed > 0) {
       document.getElementById('start-stats').style.display = 'flex';
       document.getElementById('stat-best').textContent  = bestScore;
@@ -974,19 +941,16 @@
       document.getElementById('stat-games').textContent = gamesPlayed;
     }
 
-    // Check if we're actually offline
     const backLink = document.getElementById('back-home');
-    if (!navigator.onLine) {
-      backLink.textContent = 'reconnecting…';
-    }
+    if (!navigator.onLine) backLink.textContent = 'reconnecting…';
     window.addEventListener('online', () => {
       backLink.textContent = '← back online — go home';
       backLink.href = '/';
     });
 
-    // Start idle draw
     drawFrame();
     idleLoop();
+
   })();
   </script>
 </body>
